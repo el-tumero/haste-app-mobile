@@ -1,26 +1,57 @@
-import { createContext } from "react"
+import { createContext , useCallback, useState } from "react"
 import { Text, Button, SafeAreaView, TextInput, StyleSheet, View } from "react-native"
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
 import Card from "./Card"
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export const RegisterContext = createContext();
 
 export default function Register(){
 
-    const [registerStep, setRegisterStep] = useState(0);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        // console.warn("A date has been picked: ", date);
+        
+        setUserData(prev => ({
+            ...prev,
+            birthDate: date
+        }))
+
+        hideDatePicker();
+    };
+
+    const [registerStep, setRegisterStep] = useState(0);
+    const [userData, setUserData] = useState({
+        firstName: "",
+        localization: "",
+        birthDate: new Date(),
+        sex: "",
+        target: "",
+        intimacy: "",
+        photos: [],
+        intersts: [],
+        socials: [],
+        bio: ""
+    })
 
     const handleNextRegisterStep = () => {
         setRegisterStep(registerStep => registerStep + 1)
     }
 
-
     const handleSubmit = () => {
 
     }
     
-    const onChangeText = () => {
+    const onChangeName = () => {
 
     }
 
@@ -28,67 +59,38 @@ export default function Register(){
         return(
             <SafeAreaView style={styles.main}>
                 <StatusBar style="auto" />
-                {/* <Text>STEP 1</Text>
-                <TextInput
-                style={styles.textinput}
-                onChangeText={onChangeText}
-                /> */}
+                <Card title="STEP 1">
+                    <TextInput
+                    style={styles.textinput}
+                    placeholder="FIRST NAME"
+                    />
 
-                <Button 
-                title="NEXT STEP"
-                onPress={handleNextRegisterStep}
-                />
+                    <View>
+                        <Button title="Show Date Picker" onPress={showDatePicker} />
+                        <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            onConfirm={handleConfirm}
+                            onCancel={hideDatePicker}
+                        />
+                    </View>
+                    <Text>
+                        {userData.birthDate.toString()}
+                    </Text>
+
+                    <Button 
+                    title="NEXT STEP"
+                    onPress={handleNextRegisterStep}
+                    />
+                </Card>
             </SafeAreaView>
         )
     } 
     return(
         <SafeAreaView style={styles.main}>
                 <StatusBar style="auto" />
-
-
-                <Button 
-                title="NEXT STEP"
-                onPress={handleNextRegisterStep}
-                />
             </SafeAreaView>
     )
-    
-
-
-    // OLD
-    // if(registerStep == 0){
-    //     return(
-    //         <SafeAreaView style={styles.main}>
-    //             <StatusBar style="auto" />
-    //             <Card
-    //             title="REGISTER"
-    //             content={"STEP 0"}
-    //             >
-    //                 <Button title="FSDFDF"></Button>
-    //             </Card>
-    //             <Button 
-    //             title="NEXT STEP"
-    //             onPress={handleNextRegisterStep}
-    //             />
-    //             <Text>{registerStep}</Text>
-    //         </SafeAreaView>
-    //     )
-    // } 
-    // return(
-    //     <SafeAreaView style={styles.main}>
-    //             <StatusBar style="auto" />
-    //             <Card
-    //             title="REGISTER"
-    //             content={"STEP 1"}
-    //             />
-    //             <Button 
-    //             title="NEXT STEP"
-    //             onPress={handleNextRegisterStep}
-    //             />
-    //             <Text>{registerStep}</Text>
-    //         </SafeAreaView>
-    // )
-    
 }
 
 const styles = StyleSheet.create({
@@ -103,8 +105,8 @@ const styles = StyleSheet.create({
     },
 
     textinput: {
-        width: "60%",
-        height: "5%",
-        backgroundColor: "blue",
+        width: "100%",
+        height: "7%",
+        backgroundColor: "rgb(210,210,210)",
     }
 })

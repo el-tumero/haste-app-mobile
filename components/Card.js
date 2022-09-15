@@ -1,18 +1,18 @@
 import { Text, Button, SafeAreaView, TextInput, StyleSheet, View } from "react-native"
 
-export default function Card({ title, content }){
+export default function Card(props){
     
     return(
                 <View style={styles.card}>
                     <Text
                     style={styles.cardTitle}>
-                        {title}
+                    {props.title}
                     </Text>
 
+                    {props.children}
+
                     <View style={styles.content}>
-                        <Text>
-                        {content}
-                        </Text>
+                        
                     </View>
                 </View>
     )
