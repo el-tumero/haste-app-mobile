@@ -6,15 +6,9 @@ import { useState } from 'react'
 import Login, {LoginContext} from './routes/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Home, {HomeContext} from './routes/Home';
-
-
-
-
+import Register, {RegisterContext} from './components/Register';
 
 const Stack = createNativeStackNavigator()
-
-
-
 
 function App() {
 
@@ -28,7 +22,6 @@ function App() {
   .catch(err => console.log(err))
 
   
-
   if(isLogged){
     return (
       <HomeContext.Provider value={setLogged}>
@@ -42,14 +35,37 @@ function App() {
   }
 
   return (
-    <LoginContext.Provider value={setLogged}>
+    <RegisterContext.Provider value={setLogged}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
+          <Stack.Screen name="Register" component={Register} options={{headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
-    </LoginContext.Provider>
+    </RegisterContext.Provider>
   )
+  // OLD 
+
+  // if(isLogged){
+  //   return (
+  //     <HomeContext.Provider value={setLogged}>
+  //       <NavigationContainer>
+  //         <Stack.Navigator>
+  //           <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
+  //         </Stack.Navigator>
+  //       </NavigationContainer>
+  //     </HomeContext.Provider>
+  //   );
+  // }
+
+  // return (
+  //   <LoginContext.Provider value={setLogged}>
+  //     <NavigationContainer>
+  //       <Stack.Navigator>
+  //         <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
+  //       </Stack.Navigator>
+  //     </NavigationContainer>
+  //   </LoginContext.Provider>
+  // )
   
 }
 
