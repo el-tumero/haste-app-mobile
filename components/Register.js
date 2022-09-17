@@ -1,5 +1,5 @@
-import { createContext , useCallback, useState } from "react"
-import { Text, Button, SafeAreaView, TextInput, StyleSheet, View, Pressable } from "react-native"
+import { createContext , useCallback, useState, useEffect } from "react"
+import { Text, Button, SafeAreaView, TextInput, StyleSheet, View, Pressable, CheckBox } from "react-native"
 import { StatusBar } from "expo-status-bar";
 import Card from "./Card"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -15,14 +15,19 @@ Raleway_700Bold, } from '@expo-google-fonts/raleway';
 export const RegisterContext = createContext();
     
 export default function Register() {
-        
+    
     const [registerStep, setRegisterStep] = useState(0);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [shortDate, setShortDate] = useState('');
+    const [target, setTarget] = useState('')
+
     const [userData, setUserData] = useState({
-        firstName: "",
+        name: "",
         localization: "",
-        birthDate: new Date(),
-        sex: "",
+        birthDate: "",
+        gender: "",
         target: "",
         intimacy: "",
         photos: [],
@@ -48,76 +53,88 @@ export default function Register() {
         setDatePickerVisibility(false);
     };
     
-    
     // HANDLE DATE CONFIRM
-    const handleConfirm = (date) => {
+    const handleDateConfirm = (date) => {
+        const compactBirthDate = date.toString().substring(4,15)
+        setShortDate(compactBirthDate)
+        console.log(compactBirthDate)
         setUserData(prev => ({
             ...prev,
-            birthDate: date
+            birthDate: compactBirthDate
         }))
-        
         hideDatePicker();
     };
     
-    
-    const onChangeName = (firstName) => {
-        userData.firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1)
-        console.log(userData.firstName)
+    const onChangeName = (name) => {
+        userData.name = name.charAt(0).toUpperCase() + name.slice(1)
     }
-    
 
     const handleGeolocationAccess = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
+        console.log(status)
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
     }
 
     const handleGeolocationGet = async () => {
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-        console.log(location)
+        try {
+            let location = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, maximumAge: 10000});
+            console.log(location)
+        } catch (error) {
+            console.log(error)
+        }
     }
-
 
     const handleNextRegisterStep = () => {
-        
-        // HANDLE STEP 1 NULL
-        if(userData.firstName.length < 1){
-            // DODAJ POPUP -> ZA KROTKIE IMIE/ BRAK IMIENIA ??
-            console.warn("ZA KROTKIE IMIE -> POPUP + CZERWONY TEXTFIELD")
-        }
-        setRegisterStep(registerStep => registerStep + 1)
-        console.log(userData)
+            setRegisterStep(registerStep => registerStep + 1)
+            console.log(userData)
     }
 
+    const handleChangeGender = (selectedGender) => {
+        console.log(selectedGender)
+        setUserData(prev => ({
+            ...prev,
+            gender: selectedGender
+        }))
+    }
 
+    // STEP 0 --- IMIE + DATA URODZENIA
     if(registerStep == 0){
         return(
             <SafeAreaView style={styles.main}>
                 <StatusBar style="auto" />
-                <Card title="STEP 1">
+                <Card title="Jak Ci na imię?">
                     <TextInput
                     style={styles.textinput}
-                    placeholder="Imię: "
+                    placeholder="    Twoje imię" // lazy
+                    placeholderTextColor='grey'
                     onChangeText={onChangeName}
                     />
+                    
 
                     <View>
-                        <Button title="Wybierz datę urodzenia: " onPress={showDatePicker} />
+                        <Pressable
+                        style={styles.nextButton}
+                        onPress={showDatePicker}
+                        >
+                        <Text
+                        style={styles.nextButtonText}>
+                            Wybierz datę urodzenia: 
+                            </Text>
+                        </Pressable>
                         <DateTimePickerModal
                             isVisible={isDatePickerVisible}
                             mode="date"
-                            onConfirm={handleConfirm}
+                            onConfirm={handleDateConfirm}
                             onCancel={hideDatePicker}
                         />
                     </View>
-                    <Text style={styles.birthDateString}>
-                        {userData.birthDate.toString()}
+                    <Text
+                    style={styles.regText}
+                    >
+                        Wybrana data: {shortDate}
                     </Text>
 
                     <Pressable
@@ -130,25 +147,65 @@ export default function Register() {
             </SafeAreaView>
         )
     }
+
+    // STEP 1 --- LOKALIZACJA + PŁEĆ
     if(registerStep == 1){
         return(
+
             <SafeAreaView style={styles.main}>
                 <StatusBar style="auto" />
-                    <Card title="STEP 2">
-                        <Button
-                        title="request location "
+
+                    <Card title="Halo, gdzie jesteś?">
+                        
+                        <Pressable
+                        style={styles.nextButton}
                         onPress={handleGeolocationAccess}
-                        />
-                        <Button
-                        title="console location"
+                        >
+                        <Text style={styles.nextButtonText}>
+                        Zezwól na lokalizacje
+                        </Text>
+                        </Pressable>
+
+                        <Pressable
+                        style={styles.nextButton}
                         onPress={handleGeolocationGet}
-                        />
+                        >
+                        <Text style={styles.nextButtonText}>
+                        CLI lokalizacja
+                        </Text>
+                        </Pressable>
+
+                        <View>
+                            <Text style={styles.medText}>Identyfikuje się jako</Text>
+                            <Pressable
+                            style={styles.nextButtonHalf}
+                            onPress={() => handleChangeGender("male")}
+                            >
+                                <Text style={styles.nextButtonText}>Mężczyzna</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.nextButtonHalf}
+                            onPress={() => handleChangeGender("female")}
+                            >
+                            <Text style={styles.nextButtonText}>Kobieta</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.nextButtonHalf}
+                            onPress={() => handleChangeGender("other")}
+                            >
+                            <Text style={styles.nextButtonText}>Inne</Text>
+                            </Pressable>
+                        </View>
+
                         <Pressable
                         style={styles.nextButton}
                         onPress={handleNextRegisterStep}
                         >
                         <Text style={styles.nextButtonText}>DALEJ</Text>
                         </Pressable>
+
                     </Card>
             </SafeAreaView>
         )
@@ -157,9 +214,16 @@ export default function Register() {
         return(
             <SafeAreaView style={styles.main}>
                 <StatusBar style="auto" />
-                    <Card title="STEP 2">
+                    <Card title="Powiedz nam czego szukasz">
 
+                        <Text style={styles.regText}></Text>
 
+                        <Pressable
+                        style={styles.nextButton}
+                        onPress={handleNextRegisterStep}
+                        >
+                        <Text style={styles.nextButtonText}>DALEJ</Text>
+                        </Pressable>
                     </Card>
             </SafeAreaView>
         )
@@ -181,35 +245,89 @@ const styles = StyleSheet.create({
     },
 
     textinput: {
-        width: "100%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        width: "80%",
         height: "7%",
         backgroundColor: "rgb(210,210,210)",
+        marginTop: "8%",
+        marginBottom: "8%",
+        borderRadius: 6,
     },
 
     textinputError: {
-        width: "100%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        width: "80%",
         height: "7%",
         backgroundColor: "rgb(210,210,210)",
         borderWidth: 1,
         borderColor: "red",
+        marginTop: "8%",
+        marginBottom: "8%",
+        borderRadius: 6,
     },
 
     nextButton: {
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
         backgroundColor: 'black',
-        fontFamily: 'Raleway_700Bold',
+        marginLeft: "10%",
+        marginRight: "10%",
+        width: "80%",
+        marginTop: "4%",
+        marginBottom: "4%",
+        borderRadius: 6,
+    },
+
+    nextButtonHalf: {
+        flexDirection:'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        backgroundColor: 'black',
+        marginLeft: "25%",
+        marginRight: "25%",
+        width: "50%",
+        marginTop: "4%",
+        marginBottom: "4%",
+        borderRadius: 6,
     },
 
     nextButtonText: {
         color: "white",
+        fontFamily: "Raleway_700Bold",
     },
 
-    birthDateString: {
+    smText: {
+        color: "white",
+        fontFamily: "Raleway_300Light",
+        fontSize: 16,
+        textAlign: "center",
+    },
+
+    regText: {
+        color: "white",
+        fontFamily: "Raleway_400Regular",
+        fontSize: 18,
+        textAlign: "center",
+    },
+
+    medText: {
+        color: "white",
+        fontFamily: "Raleway_500Medium",
+        fontSize: 20,
+        textAlign: "center",
+    },
+
+    bigText: {
+        color: "white",
+        fontFamily: "Raleway_700Bold",
         fontSize: 22,
-    }
+        textAlign: "center",
+    },
+
+
+
 })

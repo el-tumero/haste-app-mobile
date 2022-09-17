@@ -10,6 +10,17 @@ Raleway_700Bold, } from '@expo-google-fonts/raleway';
 
 
 export default function Card(props){
+
+    let [fontsLoaded] = useFonts({
+        Raleway_300Light,
+        Raleway_400Regular,
+        Raleway_500Medium,
+        Raleway_600SemiBold,
+        Raleway_700Bold,
+      });
+      if (!fontsLoaded) {
+        return null;
+      }
     
     return(
                 <View style={styles.card}>
@@ -41,13 +52,14 @@ const styles = StyleSheet.create({
 
     cardTitle: {
         fontSize: 20,
-        backgroundColor: "rgb(180,180,180)",
         textAlign: "center",
-        color: "white"
+        color: "white",
+        fontFamily: "Raleway_500Medium"
     },
 
     content: {
         fontSize: 14,
+        fontFamily: "Raleway_400Regular",
         textAlign: "center",
     },
 
