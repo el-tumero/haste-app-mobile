@@ -33,7 +33,7 @@ export default function Register() {
         photos: [],
         intersts: [],
         socials: [],
-        bio: ""
+        bio: "",
     })
     let [fontsLoaded] = useFonts({
         Raleway_300Light,
@@ -112,7 +112,6 @@ export default function Register() {
                     placeholderTextColor='grey'
                     onChangeText={onChangeName}
                     />
-                    
 
                     <View>
                         <Pressable
