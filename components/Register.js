@@ -155,13 +155,8 @@ export default function Register() {
         setBioCounter(bio.length)
     }
 
-    const handleSocialFacebook = (socialsUsername) => {
-        setSocials(socialsUsername)
-        setUserData(prev => ({
-            ...prev,
-            socials: socials
-        }))
-        console.log(userData.socials)
+    const handleSocialsChange = () => {
+    
     }  
 
     const handleInterestPick = (interest) => {
@@ -569,19 +564,19 @@ export default function Register() {
                     ></Image>
                     <TextInput
                     style={styles.textinputSocial}
-                    onChange={handleSocialFacebook}
+                    onChange={handleSocialsChange}
                     placeholder="facebook:"
                     ></TextInput>
 
                     
                     <Image
-                    source={facebook}
+                    source={instagram}
                     style={styles.socialsIcon}
                     ></Image>
                     <TextInput
                     style={styles.textinputSocial}
-                    onChange={handleSocialFacebook}
-                    placeholder="facebook:"
+                    onChange={handleSocialsChange}
+                    placeholder="instagram:"
                     ></TextInput>
 
                 </View>
