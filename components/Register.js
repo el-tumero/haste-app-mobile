@@ -175,106 +175,51 @@ export default function Register() {
             interests: interests
         }))
     }
-
-    if(registerStep == 0) {
+    if(registerStep == 0){
         return(
             <SafeAreaView style={styles.main}>
-            <StatusBar style="dark" />
-
-            <Card title="Napisz coś ciekawego o sobie ;)">
-
-                <Text style={styles.regText}>Bio: </Text>
-                <TextInput
-                style={styles.textinputBio}
-                onChangeText={handleBioChange}
-                ></TextInput>
-                <Text style={styles.smText}>{bioCounter}/400</Text>
-
-
-                <View style={styles.socialsCtn}>
-
-                    <Text style={styles.regText}>Podaj swoje sociale żebyś mógł wymienić się z matchem</Text>
-
-                    <Image
-                    source={facebook}
-                    style={styles.socialsIcon}
-                    ></Image>
+                <StatusBar style="dark" />
+                <Card title="Jak Ci na imię?">
                     <TextInput
-                    style={styles.textinputSocial}
-                    onChange={handleSocialFacebook}
-                    placeholder="facebook:"
-                    ></TextInput>
+                    style={styles.textinput}
+                    placeholder="    Twoje imię" // lazy
+                    placeholderTextColor='grey'
+                    onChangeText={onChangeName}
+                    />
 
-                    
-                    <Image
-                    source={facebook}
-                    style={styles.socialsIcon}
-                    ></Image>
-                    <TextInput
-                    style={styles.textinputSocial}
-                    onChange={handleSocialFacebook}
-                    placeholder="facebook:"
-                    ></TextInput>
+                    <View>
+                        <Pressable
+                        style={styles.nextButton}
+                        onPress={showDatePicker}
+                        >
+                        <Text
+                        style={styles.nextButtonText}>
+                            Wybierz datę urodzenia: 
+                            </Text>
+                        </Pressable>
+                        <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            onConfirm={handleDateConfirm}
+                            onCancel={hideDatePicker}
+                        />
+                    </View>
+                    <Text
+                    style={styles.regText}
+                    >
+                        Wybrana data: {shortDate}
+                    </Text>
 
-                </View>
-
-                <Pressable
-                style={styles.nextButton}
-                onPress={handleNextRegisterStep}
-                >
-                <Text style={styles.nextButtonText}>DALEJ</Text>
-                </Pressable>
-            </Card>
-
+                    <Pressable
+                    style={styles.nextButton}
+                    onPress={handleNextRegisterStep}
+                    >
+                    <Text style={styles.nextButtonText}>DALEJ</Text>
+                    </Pressable>
+                </Card>
             </SafeAreaView>
         )
     }
-
-    // if(registerStep == 0){
-    //     return(
-    //         <SafeAreaView style={styles.main}>
-    //             <StatusBar style="dark" />
-    //             <Card title="Jak Ci na imię?">
-    //                 <TextInput
-    //                 style={styles.textinput}
-    //                 placeholder="    Twoje imię" // lazy
-    //                 placeholderTextColor='grey'
-    //                 onChangeText={onChangeName}
-    //                 />
-
-    //                 <View>
-    //                     <Pressable
-    //                     style={styles.nextButton}
-    //                     onPress={showDatePicker}
-    //                     >
-    //                     <Text
-    //                     style={styles.nextButtonText}>
-    //                         Wybierz datę urodzenia: 
-    //                         </Text>
-    //                     </Pressable>
-    //                     <DateTimePickerModal
-    //                         isVisible={isDatePickerVisible}
-    //                         mode="date"
-    //                         onConfirm={handleDateConfirm}
-    //                         onCancel={hideDatePicker}
-    //                     />
-    //                 </View>
-    //                 <Text
-    //                 style={styles.regText}
-    //                 >
-    //                     Wybrana data: {shortDate}
-    //                 </Text>
-
-    //                 <Pressable
-    //                 style={styles.nextButton}
-    //                 onPress={handleNextRegisterStep}
-    //                 >
-    //                 <Text style={styles.nextButtonText}>DALEJ</Text>
-    //                 </Pressable>
-    //             </Card>
-    //         </SafeAreaView>
-    //     )
-    // }
 
     if(registerStep == 1){
         return(
@@ -599,6 +544,7 @@ export default function Register() {
         )
     }
 
+    
     if(registerStep == 6) {
         return(
             <SafeAreaView style={styles.main}>
@@ -608,12 +554,44 @@ export default function Register() {
 
                 <Text style={styles.regText}>Bio: </Text>
                 <TextInput
-                style={styles.textinput}
+                style={styles.textinputBio}
                 onChangeText={handleBioChange}
-                placeholder="Bio"
                 ></TextInput>
                 <Text style={styles.smText}>{bioCounter}/400</Text>
 
+
+                <View style={styles.socialsCtn}>
+                    <Text style={styles.regText}>Podaj swoje sociale żebyś mógł wymienić się z matchem</Text>
+
+                    <Image
+                    source={facebook}
+                    style={styles.socialsIcon}
+                    ></Image>
+                    <TextInput
+                    style={styles.textinputSocial}
+                    onChange={handleSocialFacebook}
+                    placeholder="facebook:"
+                    ></TextInput>
+
+                    
+                    <Image
+                    source={facebook}
+                    style={styles.socialsIcon}
+                    ></Image>
+                    <TextInput
+                    style={styles.textinputSocial}
+                    onChange={handleSocialFacebook}
+                    placeholder="facebook:"
+                    ></TextInput>
+
+                </View>
+
+                <Pressable
+                style={styles.nextButton}
+                onPress={handleNextRegisterStep}
+                >
+                <Text style={styles.nextButtonText}>DALEJ</Text>
+                </Pressable>
             </Card>
 
             </SafeAreaView>
