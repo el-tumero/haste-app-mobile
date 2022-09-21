@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: "center",
         color: "white",
-        fontFamily: "Raleway_500Medium"
+        fontFamily: "Raleway_500Medium",
+        marginBottom: 80,
     },
 
     content: {

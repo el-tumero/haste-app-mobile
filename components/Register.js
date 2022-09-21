@@ -1,9 +1,16 @@
 import { createContext , useCallback, useState, useEffect } from "react"
-import { Text, Button, SafeAreaView, TextInput, StyleSheet, View, Pressable, CheckBox } from "react-native"
+import { Text, Button, SafeAreaView, TextInput, StyleSheet, View, Pressable, Image  } from "react-native"
 import { StatusBar } from "expo-status-bar";
 import Card from "./Card"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Location from 'expo-location';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import * as ImagePicker from 'expo-image-picker';
+import facebook from '../assets/socials/facebook.png'
+import instagram from '../assets/socials/instagram.png'
+import snapchat from '../assets/socials/snapchat.png'
+import telegram from '../assets/socials/telegram.png'
+
 import { useFonts,
 Raleway_300Light,
 Raleway_400Regular,
@@ -21,20 +28,25 @@ export default function Register() {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [shortDate, setShortDate] = useState('');
-    const [target, setTarget] = useState('')
+    const [interests, setInterests] = useState([]);
+    const [socials, setSocials] = useState([]);
+    const [interestsCounter, setInterestsCounter] = useState(0);
+    const [image, setImage] = useState(null);
+    const [bioCounter, setBioCounter] = useState(0);
 
     const [userData, setUserData] = useState({
         name: "",
-        localization: "",
-        birthDate: "",
+        localization: {},
+        birthDate: new Date(),
         gender: "",
         target: "",
-        intimacy: "",
+        goal: "",
         photos: [],
-        intersts: [],
+        interests: [],
         socials: [],
         bio: "",
     })
+
     let [fontsLoaded] = useFonts({
         Raleway_300Light,
         Raleway_400Regular,
@@ -52,7 +64,25 @@ export default function Register() {
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
-    
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: false,
+          aspect: [1, 1],
+          quality: 1,
+        });
+        setUserData(prev => ({
+            ...prev,
+            photos: result
+        }))
+        // get base64 soon
+        if (!result.cancelled) {
+        setImage(result.uri);
+        }
+    };
+
     // HANDLE DATE CONFIRM
     const handleDateConfirm = (date) => {
         const compactBirthDate = date.toString().substring(4,15)
@@ -81,6 +111,10 @@ export default function Register() {
     const handleGeolocationGet = async () => {
         try {
             let location = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, maximumAge: 10000});
+            setUserData(prev => ({
+                ...prev,
+                localization: location
+            }))
             console.log(location)
         } catch (error) {
             console.log(error)
@@ -100,59 +134,153 @@ export default function Register() {
         }))
     }
 
-    // STEP 0 --- IMIE + DATA URODZENIA
-    if(registerStep == 0){
+    const handleTargetChange = (genderTarget) => {
+        console.log(genderTarget)
+        setUserData(prev => ({
+            ...prev,
+            target: genderTarget
+        }))
+    }
+
+    const handleGoalChange = (goal) => {
+        console.log(goal)
+        setUserData(prev => ({
+            ...prev,
+            goal: goal
+        }))
+    }
+
+    const handleBioChange = (bio) => {
+        userData.bio = bio
+        setBioCounter(bio.length)
+    }
+
+    const handleSocialFacebook = (socialsUsername) => {
+        setSocials(socialsUsername)
+        setUserData(prev => ({
+            ...prev,
+            socials: socials
+        }))
+        console.log(userData.socials)
+    }  
+
+    const handleInterestPick = (interest) => {
+        setInterestsCounter(interestsCounter => interestsCounter + 1)
+        console.log(interests)
+
+        // ASK TUMER ? LOL
+        setInterests((prev) => [...prev, interest])
+        setUserData(prev => ({
+            ...prev,
+            interests: interests
+        }))
+    }
+
+    if(registerStep == 0) {
         return(
             <SafeAreaView style={styles.main}>
-                <StatusBar style="auto" />
-                <Card title="Jak Ci na imię?">
+            <StatusBar style="dark" />
+
+            <Card title="Napisz coś ciekawego o sobie ;)">
+
+                <Text style={styles.regText}>Bio: </Text>
+                <TextInput
+                style={styles.textinputBio}
+                onChangeText={handleBioChange}
+                ></TextInput>
+                <Text style={styles.smText}>{bioCounter}/400</Text>
+
+
+                <View style={styles.socialsCtn}>
+
+                    <Text style={styles.regText}>Podaj swoje sociale żebyś mógł wymienić się z matchem</Text>
+
+                    <Image
+                    source={facebook}
+                    style={styles.socialsIcon}
+                    ></Image>
                     <TextInput
-                    style={styles.textinput}
-                    placeholder="    Twoje imię" // lazy
-                    placeholderTextColor='grey'
-                    onChangeText={onChangeName}
-                    />
+                    style={styles.textinputSocial}
+                    onChange={handleSocialFacebook}
+                    placeholder="facebook:"
+                    ></TextInput>
 
-                    <View>
-                        <Pressable
-                        style={styles.nextButton}
-                        onPress={showDatePicker}
-                        >
-                        <Text
-                        style={styles.nextButtonText}>
-                            Wybierz datę urodzenia: 
-                            </Text>
-                        </Pressable>
-                        <DateTimePickerModal
-                            isVisible={isDatePickerVisible}
-                            mode="date"
-                            onConfirm={handleDateConfirm}
-                            onCancel={hideDatePicker}
-                        />
-                    </View>
-                    <Text
-                    style={styles.regText}
-                    >
-                        Wybrana data: {shortDate}
-                    </Text>
+                    
+                    <Image
+                    source={facebook}
+                    style={styles.socialsIcon}
+                    ></Image>
+                    <TextInput
+                    style={styles.textinputSocial}
+                    onChange={handleSocialFacebook}
+                    placeholder="facebook:"
+                    ></TextInput>
 
-                    <Pressable
-                    style={styles.nextButton}
-                    onPress={handleNextRegisterStep}
-                    >
-                    <Text style={styles.nextButtonText}>DALEJ</Text>
-                    </Pressable>
-                </Card>
+                </View>
+
+                <Pressable
+                style={styles.nextButton}
+                onPress={handleNextRegisterStep}
+                >
+                <Text style={styles.nextButtonText}>DALEJ</Text>
+                </Pressable>
+            </Card>
+
             </SafeAreaView>
         )
     }
 
-    // STEP 1 --- LOKALIZACJA + PŁEĆ
+    // if(registerStep == 0){
+    //     return(
+    //         <SafeAreaView style={styles.main}>
+    //             <StatusBar style="dark" />
+    //             <Card title="Jak Ci na imię?">
+    //                 <TextInput
+    //                 style={styles.textinput}
+    //                 placeholder="    Twoje imię" // lazy
+    //                 placeholderTextColor='grey'
+    //                 onChangeText={onChangeName}
+    //                 />
+
+    //                 <View>
+    //                     <Pressable
+    //                     style={styles.nextButton}
+    //                     onPress={showDatePicker}
+    //                     >
+    //                     <Text
+    //                     style={styles.nextButtonText}>
+    //                         Wybierz datę urodzenia: 
+    //                         </Text>
+    //                     </Pressable>
+    //                     <DateTimePickerModal
+    //                         isVisible={isDatePickerVisible}
+    //                         mode="date"
+    //                         onConfirm={handleDateConfirm}
+    //                         onCancel={hideDatePicker}
+    //                     />
+    //                 </View>
+    //                 <Text
+    //                 style={styles.regText}
+    //                 >
+    //                     Wybrana data: {shortDate}
+    //                 </Text>
+
+    //                 <Pressable
+    //                 style={styles.nextButton}
+    //                 onPress={handleNextRegisterStep}
+    //                 >
+    //                 <Text style={styles.nextButtonText}>DALEJ</Text>
+    //                 </Pressable>
+    //             </Card>
+    //         </SafeAreaView>
+    //     )
+    // }
+
     if(registerStep == 1){
         return(
 
             <SafeAreaView style={styles.main}>
-                <StatusBar style="auto" />
+                <StatusBar style="dark" />
 
                     <Card title="Halo, gdzie jesteś?">
                         
@@ -209,25 +337,288 @@ export default function Register() {
             </SafeAreaView>
         )
     } 
-    if(registerStep == 2) {
+
+    if(registerStep == 2) { 
         return(
             <SafeAreaView style={styles.main}>
-                <StatusBar style="auto" />
+                <StatusBar style="dark" />
                     <Card title="Powiedz nam czego szukasz">
+                    <Text style={styles.regText}>Szukam:</Text>
+                    
+                    <BouncyCheckbox
+                    style={{marginLeft: "10%", marginRight: "10%"}}
+                    size={25}
+                    fillColor="#3EB489"
+                    unfillColor="#FFFFFF"
+                    text="Kobiety"
+                    iconStyle={{ borderColor: "#3EB489" }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    textStyle={styles.regText}
+                    onPress={() => handleTargetChange("female")}
+                    />
 
-                        <Text style={styles.regText}></Text>
+                    <BouncyCheckbox
+                    style={{marginLeft: "10%", marginRight: "10%"}}
 
-                        <Pressable
-                        style={styles.nextButton}
-                        onPress={handleNextRegisterStep}
-                        >
-                        <Text style={styles.nextButtonText}>DALEJ</Text>
-                        </Pressable>
-                    </Card>
+                    size={25}
+                    fillColor="#3EB489"
+                    unfillColor="#FFFFFF"
+                    text="Mężczyzny"
+                    iconStyle={{ borderColor: "#3EB489" }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    textStyle={styles.regText}
+                    onPress={() => handleTargetChange("male")}
+                    />
+
+                    <BouncyCheckbox
+                    style={{marginLeft: "10%", marginRight: "10%"}}
+
+                    size={25}
+                    fillColor="#3EB489"
+                    unfillColor="#FFFFFF"
+                    text="Oba"
+                    iconStyle={{ borderColor: "#3EB489" }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    textStyle={styles.regText}
+                    onPress={() => handleTargetChange("both")}
+                    />
+
+
+                    <Text style={styles.regText}>Chcę tu:</Text>
+
+                    <BouncyCheckbox
+                    style={{marginLeft: "10%", marginRight: "10%"}}
+                    size={25}
+                    fillColor="#3EB489"
+                    unfillColor="#FFFFFF"
+                    text="Spotykać się i randkować"
+                    iconStyle={{ borderColor: "#3EB489" }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    textStyle={styles.regText}
+                    onPress={() => handleGoalChange("dating")}
+                    />
+
+                    <BouncyCheckbox
+                    style={{marginLeft: "10%", marginRight: "10%"}}
+                    size={25}
+                    fillColor="#3EB489"
+                    unfillColor="#FFFFFF"
+                    text="Znaleźć długotrwałą relację"
+                    iconStyle={{ borderColor: "#3EB489" }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    textStyle={styles.regText}
+                    onPress={() => handleGoalChange("longterm")}
+                    />
+
+                    <BouncyCheckbox
+                    style={{marginLeft: "10%", marginRight: "10%"}}
+                    size={25}
+                    fillColor="#3EB489"
+                    unfillColor="#FFFFFF"
+                    text="Znaleźć relację bez zobowiązań"
+                    iconStyle={{ borderColor: "#3EB489" }}
+                    innerIconStyle={{ borderWidth: 2 }}
+                    textStyle={styles.regText}
+                    onPress={() => handleGoalChange("casual")}
+                    />
+
+                    <Pressable
+                    style={styles.nextButton}
+                    onPress={handleNextRegisterStep}
+                    >
+                    <Text style={styles.nextButtonText}>DALEJ</Text>
+                    </Pressable>
+                </Card>
             </SafeAreaView>
         )
     }
-    
+
+    if(registerStep == 3) {
+        return(
+            <SafeAreaView style={styles.main}>
+                <StatusBar style="dark" />
+                <Card title="Jakie są Twoje pasje?">
+
+                    <Text style={styles.medText}>Wybierz od 3 do 5</Text>
+                    <Text style={styles.smText}>{interestsCounter}</Text>
+
+                    <View style={styles.interestCtn}>
+                        <View style={styles.interestOuterLayout}>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("movies")}
+                            >
+                            <Text style={styles.interestText}>Filmy</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("books")}
+                            >
+                            <Text style={styles.interestText}>Książki</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("soccer")}
+                            >
+                            <Text style={styles.interestText}>Piłka nożna</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("gaming")}
+                            >
+                            <Text style={styles.interestText}>Gaming</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("guitar")}
+                            >
+                            <Text style={styles.interestText}>Granie na gitarze</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("horseriding")}
+                            >
+                            <Text style={styles.interestText}>Jazda konno</Text>
+                            </Pressable>
+
+                        </View>
+                    </View>
+
+                <Pressable
+                style={styles.nextButton}
+                onPress={handleNextRegisterStep}
+                >
+                <Text style={styles.nextButtonText}>DALEJ</Text>
+                </Pressable>
+                </Card>
+            </SafeAreaView>
+            )
+    }
+    if(registerStep == 4) {
+        return(
+            <SafeAreaView style={styles.main}>
+                <StatusBar style="dark" />
+                <Card title="Jakie są Twoje pasje?">
+
+                    <Text style={styles.medText}>Wybierz od 3 do 5</Text>
+                    <Text style={styles.smText}>{interestsCounter}</Text>
+
+                    <View style={styles.interestCtn}>
+                        <View style={styles.interestOuterLayout}>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("movies")}
+                            >
+                            <Text style={styles.interestText}>Filmy</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("books")}
+                            >
+                            <Text style={styles.interestText}>Książki</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("soccer")}
+                            >
+                            <Text style={styles.interestText}>Piłka nożna</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("gaming")}
+                            >
+                            <Text style={styles.interestText}>Gaming</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("guitar")}
+                            >
+                            <Text style={styles.interestText}>Granie na gitarze</Text>
+                            </Pressable>
+
+                            <Pressable
+                            style={styles.interestBox}
+                            onPress={() => handleInterestPick("horseriding")}
+                            >
+                            <Text style={styles.interestText}>Jazda konno</Text>
+                            </Pressable>
+
+                        </View>
+                    </View>
+
+                <Pressable
+                style={styles.nextButton}
+                onPress={handleNextRegisterStep}
+                >
+                <Text style={styles.nextButtonText}>DALEJ</Text>
+                </Pressable>
+                </Card>
+            </SafeAreaView>
+            )
+    }
+
+    if(registerStep == 5) {
+        return(
+            <SafeAreaView style={styles.main}>
+            <StatusBar style="dark" />
+            <Card title="Pokaż się!">
+
+                <View>
+                <Pressable
+                onPress={pickImage}
+                style={styles.nextButton}
+                >
+                <Text style={styles.nextButtonText}>Wybierz zdjęcia</Text>
+                </Pressable>
+
+                    <View style={styles.profileImagesCtn}>
+                    {image && <Image source={{ uri: image }} style={styles.profileImage} />}
+                    </View>
+                </View>
+
+                <Pressable
+                style={styles.nextButton}
+                onPress={handleNextRegisterStep}
+                >
+                <Text style={styles.nextButtonText}>DALEJ</Text>
+                </Pressable>
+            </Card>
+
+            </SafeAreaView>
+        )
+    }
+
+    if(registerStep == 6) {
+        return(
+            <SafeAreaView style={styles.main}>
+            <StatusBar style="dark" />
+
+            <Card title="Napisz coś ciekawego o sobie ;)">
+
+                <Text style={styles.regText}>Bio: </Text>
+                <TextInput
+                style={styles.textinput}
+                onChangeText={handleBioChange}
+                placeholder="Bio"
+                ></TextInput>
+                <Text style={styles.smText}>{bioCounter}/400</Text>
+
+            </Card>
+
+            </SafeAreaView>
+        )
+    }
 }
 
 
@@ -252,6 +643,29 @@ const styles = StyleSheet.create({
         marginTop: "8%",
         marginBottom: "8%",
         borderRadius: 6,
+        textDecorationLine: "none",
+    },
+
+    textinputBio: {
+        marginLeft: "10%",
+        marginRight: "10%",
+        width: "80%",
+        height: "22%",
+        backgroundColor: "rgb(210,210,210)",
+        marginTop: "1%",
+        marginBottom: "1%",
+        borderRadius: 6,
+        textDecorationLine: "none",
+    },
+
+    textinputSocial: {
+        marginLeft: "25%",
+        marginRight: "10%",
+        width: "65%",
+        backgroundColor: "rgb(210,210,210)",
+        marginTop: "-13%",
+        borderRadius: 6,
+        textDecorationLine: "none",
     },
 
     textinputError: {
@@ -265,6 +679,43 @@ const styles = StyleSheet.create({
         marginTop: "8%",
         marginBottom: "8%",
         borderRadius: 6,
+        textDecorationLine: "none",
+    },
+
+    checkbox: {
+        marginLeft: "10%",
+        marginRight: "10%",
+    },
+
+    interestCtn: {
+        flex: 1,
+        justifyContent: "space-around",
+        width: "80%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        marginTop: "10%",
+        marginBottom: "10%",
+    },
+
+    interestOuterLayout: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: "wrap",
+    },
+
+    interestBox: {
+        backgroundColor: "rgb(44,49,56)",
+        borderRadius: 6,
+        margin: 3,
+    },
+
+    interestText: {
+        color: "white",
+        fontFamily: "Raleway_400Regular",
+        fontSize: 13,
+        padding: 8,
     },
 
     nextButton: {
@@ -302,8 +753,10 @@ const styles = StyleSheet.create({
     smText: {
         color: "white",
         fontFamily: "Raleway_300Light",
-        fontSize: 16,
+        fontSize: 14,
         textAlign: "center",
+        flexWrap: "wrap",
+        textDecorationLine: "none",
     },
 
     regText: {
@@ -311,22 +764,60 @@ const styles = StyleSheet.create({
         fontFamily: "Raleway_400Regular",
         fontSize: 18,
         textAlign: "center",
+        flexWrap: "wrap",
+        textDecorationLine: "none",
     },
 
     medText: {
         color: "white",
         fontFamily: "Raleway_500Medium",
-        fontSize: 20,
+        fontSize: 22,
         textAlign: "center",
+        flexWrap: "wrap",
+        textDecorationLine: "none",
     },
 
     bigText: {
         color: "white",
         fontFamily: "Raleway_700Bold",
-        fontSize: 22,
+        fontSize: 26,
         textAlign: "center",
+        flexWrap: "wrap",
+        textDecorationLine: "none",
     },
 
+    profileImagesCtn: {
+        marginLeft: "10%",
+        marginRight: "10%",
+        width: "80%",
+        height: "65%",
+        backgroundColor: "rgb(42, 48, 54)",
+        borderRadius: 6,
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+    },  
 
+    profileImage: {
+        width: 200,
+        height: 200,
+        borderRadius: 6,
+        borderWidth: 4,
+        borderColor: "#3EB489",
+    },
+
+    socialsCtn: {
+        marginTop: "4%",
+        marginBottom: "2%",
+        marginLeft: "10%",
+        marginRight: "10%",
+        width: "80%",
+    },
+
+    socialsIcon: {
+        marginTop: "2%",
+        width: 50,
+        height: 50,
+    },
 
 })
