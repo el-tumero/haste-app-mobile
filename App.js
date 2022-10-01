@@ -1,33 +1,38 @@
 // import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { useState } from 'react'
-import Login, {LoginContext} from './routes/Login';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import Home, {HomeContext} from './routes/Home';
-import Register, {RegisterContext} from './components/Register';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import Login, { LoginContext } from "./routes/Login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Home, { HomeContext } from "./routes/Home";
+import ProfileCreation, {
+  ProfileCreationContext,
+} from "./components/ProfileCreation";
+import Register, { RegisterContext } from "./components/Register";
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
 function App() {
-
-  const [isLogged, setLogged] = useState(false)
-  const [jwt, setJwt] = useState("")
+  const [isLogged, setLogged] = useState(false);
+  const [jwt, setJwt] = useState("");
 
   AsyncStorage.getItem("sessionToken")
-  .then(value => {
-    if(value !== null) setLogged(true)
-  })
-  .catch(err => console.log(err))
+    .then((value) => {
+      if (value !== null) setLogged(true);
+    })
+    .catch((err) => console.log(err));
 
-  
-  if(isLogged){
+  if (isLogged) {
     return (
       <HomeContext.Provider value={setLogged}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </HomeContext.Provider>
@@ -38,12 +43,16 @@ function App() {
     <RegisterContext.Provider value={setLogged}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Register" component={Register} options={{headerShown: false}} />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </RegisterContext.Provider>
-  )
-  // OLD 
+  );
+  // OLD
 
   // if(isLogged){
   //   return (
@@ -66,8 +75,6 @@ function App() {
   //     </NavigationContainer>
   //   </LoginContext.Provider>
   // )
-  
 }
-
 
 export default App;
