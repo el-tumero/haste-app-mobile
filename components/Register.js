@@ -1,10 +1,9 @@
-import jsotp from "jsotp";
+import jsotp from "jsotp"; // check if can remove later
 import { Base32 } from "jsotp";
 import { AES } from "crypto-js";
 import { useState, createContext } from "react";
 import axios from "axios";
-import QRCode from "qrcode";
-import SvgUri from "react-native-svg-uri";
+import QRCode from "react-native-qrcode-image";
 import {
   Text,
   SafeAreaView,
@@ -17,11 +16,11 @@ import {
 import { StatusBar } from "expo-status-bar";
 
 export const RegisterContext = createContext();
-
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [qrcode, setQrcode] = useState("");
+  const [UUID, setUUID] = useState("");
 
   const handleChangeUsername = (username) => {
     setUsername(username);
@@ -34,12 +33,8 @@ export default function Register() {
   const handleRegisterSubmit = async () => {
     const secret = Base32.random_gen();
     const uri = `otpauth://totp/HASTE:${username}?secret=${secret}&issuer=HASTE`;
-
-    const qr = await QRCode.toString(uri);
-    setQrcode(qr);
-
     const encryptedSecret = AES.encrypt(secret, password).toString();
-
+    setQrcode(uri);
     console.log(username, encryptedSecret);
 
     axios
@@ -49,6 +44,12 @@ export default function Register() {
       })
       .then((response) => {
         console.log(response.data);
+
+        if (response.status == 200) {
+          console.log(response.data);
+          console.log("successfully created user!");
+          // go to profile creation
+        }
       });
   };
 
@@ -76,7 +77,13 @@ export default function Register() {
         <Text style={styles.text}>REGISTER</Text>
       </Pressable>
 
-      <SvgUri width="200" height="200" source={{ uri: qrcode }} />
+      <Pressable onPress={() => getValueFor("DEVICE_ID")} style={styles.button}>
+        <Text style={styles.text}>getValue</Text>
+      </Pressable>
+
+      <View style={styles.qrCtn}>
+        <QRCode value={qrcode} size={100} bgColor="#FFFFFF" fgColor="#000000" />
+      </View>
     </SafeAreaView>
   );
 }
@@ -100,13 +107,13 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 10,
+    paddingVertical: 4,
     backgroundColor: "black",
     marginLeft: "25%",
     marginRight: "25%",
     width: "50%",
-    marginTop: "3%",
-    marginBottom: "3%",
+    marginTop: "2%",
+    marginBottom: "2%",
     borderRadius: 6,
   },
   text: {
@@ -116,6 +123,9 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     backgroundColor: "grey",
+    marginLeft: "25%",
+  },
+  qrCtn: {
     marginLeft: "25%",
   },
 });
