@@ -16,20 +16,36 @@ export const MainContext = createContext();
 export default function Home() {
   return (
     <SafeAreaView style={styles.main}>
-      <StatusBar style="dark" />
-      {/* top nav bar */}
+      <StatusBar style="light" />
+      {/* TOP BAR */}
       <View style={styles.topBar}>
-        <Text>TOP</Text>
+        <View style={styles.topBarSettingsCtn}>
+          <Image
+            source={require("../assets/icons/dark_mode/setting.png")}
+            style={styles.topBar_icon}
+          />
+        </View>
       </View>
 
-      {/* content */}
+      {/* MIDDLE */}
       <View style={styles.content}>
         <Text>CONTENT</Text>
       </View>
 
-      {/* bottom bar */}
+      {/* BOTTOM BAR */}
       <View style={styles.bottomBar}>
-        <Text style={styles.dark_mode_text}>BOTTOM</Text>
+        <Image
+          source={require("../assets/icons/dark_mode/adjust.png")}
+          style={styles.bottomBar_icon}
+        />
+        <Image
+          source={require("../assets/icons/dark_mode/user.png")}
+          style={styles.bottomBar_icon}
+        />
+        <Image
+          source={require("../assets/icons/dark_mode/setting.png")}
+          style={styles.bottomBar_icon}
+        />
       </View>
     </SafeAreaView>
   );
