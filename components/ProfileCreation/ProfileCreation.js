@@ -7,21 +7,24 @@ import {
   View,
   Pressable,
   Image,
+  Appearance,
+  useColorScheme,
 } from "react-native";
 import {
   setStatusBarNetworkActivityIndicatorVisible,
   StatusBar,
 } from "expo-status-bar";
-import Card from "./Card";
+import Card from "../Card";
+import ContentCard from "../ContentCard";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Location from "expo-location";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import * as ImagePicker from "expo-image-picker";
-import facebook from "../assets/socials/facebook.png";
-import instagram from "../assets/socials/instagram.png";
-import snapchat from "../assets/socials/snapchat.png";
-import telegram from "../assets/socials/telegram.png";
-
+import facebook from "../../assets/socials/facebook.png";
+import instagram from "../../assets/socials/instagram.png";
+import snapchat from "../../assets/socials/snapchat.png";
+import telegram from "../../assets/socials/telegram.png";
+import { theme } from "../Styles";
 import {
   useFonts,
   Raleway_300Light,
@@ -31,10 +34,19 @@ import {
   Raleway_700Bold,
 } from "@expo-google-fonts/raleway";
 
+// Context
 export const ProfileCreationContext = createContext();
 
+// Import styles from ../styles + colors
+import { prf_cr_styles } from "../../styles/ProfileCreation_styles";
+import { colors } from "../../styles/Colors";
+
+// App
 export default function Register() {
-  // USERDATA STATES IN ORDER
+  // Evaluate device system theme
+  const colorScheme = useColorScheme();
+
+  // ALL USERDATA STATES IN ORDER
   const [firstName, setFirstName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [location, setLocation] = useState(null);
@@ -53,11 +65,9 @@ export default function Register() {
     signal: undefined,
     discord: undefined,
   });
-  const [image, setImage] = useState(null);
-  const [bioCounter, setBioCounter] = useState(0);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const date = new Date();
 
-  // USERDATA STATES
+  // USERDATA STATE BIG
   const [interestsCounter, setInterestsCounter] = useState(0);
   const [userData, setUserData] = useState({
     firstName: "",
@@ -72,14 +82,22 @@ export default function Register() {
     bio: "",
   });
 
-  // OTHER
+  // OTHER STATES (MISC)
   const [registerStep, setRegisterStep] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [image, setImage] = useState(null);
+  const [bioCounter, setBioCounter] = useState(0);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [isPressed, setIsPressed] = useState(false);
+  const [birthDateDay, setBirthDateDay] = useState("");
+  const [birthDateMonth, setBirthDateMonth] = useState("");
+  const [birthDateYear, setBirthDateYear] = useState("");
 
   useEffect(() => {
-    console.log(userData);
+    // console.log(userData);
   }, [userData]);
 
+  // LOADING FONTS
   let [fontsLoaded] = useFonts({
     Raleway_300Light,
     Raleway_400Regular,
@@ -88,8 +106,11 @@ export default function Register() {
     Raleway_700Bold,
   });
   if (!fontsLoaded) {
+    console.log("FAILED TO LOAD FONTS (!)");
     return null;
   }
+
+  // uloz to chronologicznie potem
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -100,7 +121,6 @@ export default function Register() {
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       base64: true,
@@ -113,14 +133,12 @@ export default function Register() {
     }
   };
 
-  const handleDateConfirm = (date) => {
-    const compactBirthDate = date.toString().substring(4, 15);
-    setBirthDate(compactBirthDate);
-    hideDatePicker();
-  };
-
   const onChangeName = (name) => {
     setFirstName(name);
+  };
+
+  const nameToUppercase = () => {
+    setFirstName(firstName.charAt(0).toUpperCase() + firstName.slice(1));
   };
 
   const handleGeolocationAccess = async () => {
@@ -145,7 +163,7 @@ export default function Register() {
     }
   };
 
-  const handleNextRegisterStep = () => {
+  const evaluateStep = (stepIndex) => {
     setUserData({
       firstName,
       birthDate,
@@ -158,8 +176,19 @@ export default function Register() {
       bio,
       socials: JSON.stringify(socials),
     });
-
     setRegisterStep((registerStep) => registerStep + 1);
+
+    // Check for errors in each step
+    switch (stepIndex) {
+      case 0:
+        console.log(`checking for err's in 0`);
+        break;
+      case 1:
+        console.log(`checking for err's in 1`);
+        break;
+      default:
+        console.log("what?");
+    }
   };
 
   const handleSexChange = (sex) => {
@@ -195,87 +224,187 @@ export default function Register() {
     setInterests([...interests, interest]);
   };
 
+  const handleBirthDateChange = (dateType) => (input) => {
+    if (dateType == "DD") {
+      setBirthDateDay(input);
+    }
+    if (dateType == "MM") {
+      setBirthDateMonth(input);
+    }
+    if (dateType == "YYYY") {
+      setBirthDateYear(input);
+    }
+  };
+
+  const submitBirthDate = async () => {
+    console.log(birthDateDay);
+    console.log(birthDateMonth);
+    console.log(birthDateYear);
+    // console.log(birthDate.toString());
+  };
+
+  const ToggleButton = () => {
+    //testing purposes
+    setIsPressed(!isPressed);
+    // console.log(colorScheme);
+    submitBirthDate();
+    evaluateStep(0);
+  };
+
+  // (0) First Name + BirthDate
   if (registerStep == 0) {
-    return (
-      <SafeAreaView style={styles.main}>
-        <StatusBar style="dark" />
-        <Card title="Jak Ci na imię?">
-          <TextInput
-            style={styles.textinput}
-            placeholder="    Twoje imię"
-            placeholderTextColor="grey"
-            onChangeText={onChangeName}
+    // Dark Theme
+    if (colorScheme === "dark") {
+      return (
+        <SafeAreaView>
+          <StatusBar
+            backgroundColor="#43FFAF"
+            networkActivityIndicatorVisible={true}
+            style="auto"
+            translucent={false}
           />
 
-          <View>
-            <Pressable style={styles.nextButton} onPress={showDatePicker}>
-              <Text style={styles.nextButtonText}>Wybierz datę urodzenia:</Text>
-            </Pressable>
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleDateConfirm}
-              onCancel={hideDatePicker}
+          <ContentCard title="Jak Ci na imię?" footer="1/6">
+            <TextInput
+              style={[styles.lineTextInput, styles.text_dark_mode]}
+              placeholder="Twoje imię"
+              placeholderTextColor="grey"
+              autoCorrect={false}
+              autoCapitalize={true}
+              onChangeText={onChangeName}
             />
-          </View>
-          <Text style={styles.regText}>Wybrana data: {birthDate}</Text>
+            <Text
+              style={[
+                styles.centerText,
+                styles.text_dark_mode,
+                styles.sampleMarginTop,
+              ]}
+            >
+              Data urodzenia
+            </Text>
+            <View style={styles.BirthDateContainer}>
+              <TextInput
+                style={[
+                  styles.textInputBirthDateShort,
+                  styles.text_dark_mode,
+                  styles.bg_dark_mode,
+                ]}
+                allowFontScaling={true}
+                autoCorrect={false}
+                autoComplete="off"
+                disableFullscreenUI={true}
+                keyboardType="number-pad"
+                maxLength={2}
+                placeholderTextColor={colors.dark_mode.text_inactive}
+                placeholder="DD"
+                value={birthDateDay}
+                onChangeText={handleBirthDateChange("DD")}
+              />
 
-          <Pressable style={styles.nextButton} onPress={handleNextRegisterStep}>
-            <Text style={styles.nextButtonText}>DALEJ</Text>
-          </Pressable>
-        </Card>
-      </SafeAreaView>
-    );
+              <TextInput
+                style={[
+                  styles.textInputBirthDateShort,
+                  styles.text_dark_mode,
+                  styles.bg_dark_mode,
+                ]}
+                allowFontScaling={true}
+                autoCorrect={false}
+                autoComplete="off"
+                disableFullscreenUI={true}
+                keyboardType="number-pad"
+                maxLength={2}
+                placeholderTextColor={colors.dark_mode.text_inactive}
+                placeholder="MM"
+                value={birthDateMonth}
+                onChangeText={handleBirthDateChange("MM")}
+              />
+
+              <TextInput
+                style={[
+                  styles.textInputBirthDateYear,
+                  styles.text_dark_mode,
+                  styles.bg_dark_mode,
+                ]}
+                allowFontScaling={true}
+                autoCorrect={false}
+                autoComplete="off"
+                disableFullscreenUI={true}
+                keyboardType="number-pad"
+                maxLength={4}
+                placeholderTextColor={colors.dark_mode.text_inactive}
+                placeholder="YYYY"
+                value={birthDateYear}
+                onChangeText={handleBirthDateChange("YYYY")}
+              />
+            </View>
+            <Text style={[styles.centerText, styles.text_dark_mode]}>
+              Twój wiek będzie publiczny.
+            </Text>
+
+            <Pressable onPress={ToggleButton}>
+              <Text>Console log date</Text>
+            </Pressable>
+            {/* missing next button (!)*/}
+          </ContentCard>
+        </SafeAreaView>
+      );
+    } else {
+      // Light theme
+      return (
+        <View>
+          <Text>Coming soon... light mode for losers.</Text>
+        </View>
+      );
+    }
   }
+  // if (registerStep == 1) {
+  //   return (
+  //     <SafeAreaView style={styles.main}>
+  //       <StatusBar style="dark" />
 
-  if (registerStep == 1) {
-    return (
-      <SafeAreaView style={styles.main}>
-        <StatusBar style="dark" />
+  //       <Card title="Halo, gdzie jesteś?">
+  //         <Pressable
+  //           style={styles.nextButton}
+  //           onPress={handleGeolocationAccess}
+  //         >
+  //           <Text style={styles.nextButtonText}>Zezwól na lokalizacje</Text>
+  //         </Pressable>
 
-        <Card title="Halo, gdzie jesteś?">
-          <Pressable
-            style={styles.nextButton}
-            onPress={handleGeolocationAccess}
-          >
-            <Text style={styles.nextButtonText}>Zezwól na lokalizacje</Text>
-          </Pressable>
+  //         <Pressable style={styles.nextButton} onPress={handleGeolocationGet}>
+  //           <Text style={styles.nextButtonText}>CLI lokalizacja</Text>
+  //         </Pressable>
 
-          <Pressable style={styles.nextButton} onPress={handleGeolocationGet}>
-            <Text style={styles.nextButtonText}>CLI lokalizacja</Text>
-          </Pressable>
+  //         <View>
+  //           <Text style={styles.medText}>Identyfikuje się jako</Text>
+  //           <Pressable
+  //             style={styles.nextButtonHalf}
+  //             onPress={() => handleSexChange("male")}
+  //           >
+  //             <Text style={styles.nextButtonText}>Mężczyzna</Text>
+  //           </Pressable>
 
-          <View>
-            <Text style={styles.medText}>Identyfikuje się jako</Text>
-            <Pressable
-              style={styles.nextButtonHalf}
-              onPress={() => handleSexChange("male")}
-            >
-              <Text style={styles.nextButtonText}>Mężczyzna</Text>
-            </Pressable>
+  //           <Pressable
+  //             style={styles.nextButtonHalf}
+  //             onPress={() => handleSexChange("female")}
+  //           >
+  //             <Text style={styles.nextButtonText}>Kobieta</Text>
+  //           </Pressable>
 
-            <Pressable
-              style={styles.nextButtonHalf}
-              onPress={() => handleSexChange("female")}
-            >
-              <Text style={styles.nextButtonText}>Kobieta</Text>
-            </Pressable>
+  //           <Pressable
+  //             style={styles.nextButtonHalf}
+  //             onPress={() => handleSexChange("other")}
+  //           >
+  //             <Text style={styles.nextButtonText}>Inne</Text>
+  //           </Pressable>
+  //         </View>
 
-            <Pressable
-              style={styles.nextButtonHalf}
-              onPress={() => handleSexChange("other")}
-            >
-              <Text style={styles.nextButtonText}>Inne</Text>
-            </Pressable>
-          </View>
-
-          <Pressable style={styles.nextButton} onPress={handleNextRegisterStep}>
-            <Text style={styles.nextButtonText}>DALEJ</Text>
-          </Pressable>
-        </Card>
-      </SafeAreaView>
-    );
-  }
+  //         <Pressable style={styles.nextButton} onPress={handleNextRegisterStep}>
+  //           <Text style={styles.nextButtonText}>DALEJ</Text>
+  //         </Pressable>
+  //       </Card>
+  //     </SafeAreaView>
+  //   );
+  // }
 
   if (registerStep == 2) {
     return (
@@ -374,6 +503,7 @@ export default function Register() {
           <Text style={styles.medText}>Wybierz od 3 do 5</Text>
           <Text style={styles.smText}>{interestsCounter}</Text>
 
+          {/* IMPORTANT - REFACTOR THIS INTO DATA ARR IN ANOTHER FILE LIKE REACT DOCS BETA (STATE TUTORIAL IMGUR)  */}
           <View style={styles.interestCtn}>
             <View style={styles.interestOuterLayout}>
               <Pressable
@@ -498,202 +628,4 @@ export default function Register() {
   }
 }
 
-// CSS
-const styles = StyleSheet.create({
-  main: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgb(210,210,210)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  textinput: {
-    marginLeft: "10%",
-    marginRight: "10%",
-    width: "80%",
-    height: "7%",
-    backgroundColor: "rgb(210,210,210)",
-    marginTop: "8%",
-    marginBottom: "8%",
-    borderRadius: 6,
-    textDecorationLine: "none",
-  },
-
-  textinputBio: {
-    marginLeft: "10%",
-    marginRight: "10%",
-    width: "80%",
-    height: "22%",
-    backgroundColor: "rgb(210,210,210)",
-    marginTop: "1%",
-    marginBottom: "1%",
-    borderRadius: 6,
-    textDecorationLine: "none",
-  },
-
-  // fix this later
-  textinputSocial: {
-    marginLeft: "25%",
-    marginRight: "10%",
-    width: "65%",
-    backgroundColor: "rgb(210,210,210)",
-    marginTop: "-20%",
-    borderRadius: 6,
-    textDecorationLine: "none",
-  },
-
-  textinputError: {
-    marginLeft: "10%",
-    marginRight: "10%",
-    width: "80%",
-    height: "7%",
-    backgroundColor: "rgb(210,210,210)",
-    borderWidth: 1,
-    borderColor: "red",
-    marginTop: "8%",
-    marginBottom: "8%",
-    borderRadius: 6,
-    textDecorationLine: "none",
-  },
-
-  checkbox: {
-    marginLeft: "10%",
-    marginRight: "10%",
-  },
-
-  interestCtn: {
-    flex: 1,
-    justifyContent: "space-around",
-    width: "80%",
-    marginLeft: "10%",
-    marginRight: "10%",
-    marginTop: "10%",
-    marginBottom: "10%",
-  },
-
-  interestOuterLayout: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-  },
-
-  interestBox: {
-    backgroundColor: "rgb(44,49,56)",
-    borderRadius: 6,
-    margin: 3,
-  },
-
-  interestText: {
-    color: "white",
-    fontFamily: "Raleway_400Regular",
-    fontSize: 13,
-    padding: 8,
-  },
-
-  nextButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    backgroundColor: "black",
-    marginLeft: "10%",
-    marginRight: "10%",
-    width: "80%",
-    marginTop: "4%",
-    marginBottom: "4%",
-    borderRadius: 6,
-  },
-
-  nextButtonHalf: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    backgroundColor: "black",
-    marginLeft: "25%",
-    marginRight: "25%",
-    width: "50%",
-    marginTop: "4%",
-    marginBottom: "4%",
-    borderRadius: 6,
-  },
-
-  nextButtonText: {
-    color: "white",
-    fontFamily: "Raleway_700Bold",
-  },
-
-  smText: {
-    color: "white",
-    fontFamily: "Raleway_300Light",
-    fontSize: 14,
-    textAlign: "center",
-    flexWrap: "wrap",
-    textDecorationLine: "none",
-  },
-
-  regText: {
-    color: "white",
-    fontFamily: "Raleway_400Regular",
-    fontSize: 18,
-    textAlign: "center",
-    flexWrap: "wrap",
-    textDecorationLine: "none",
-  },
-
-  medText: {
-    color: "white",
-    fontFamily: "Raleway_500Medium",
-    fontSize: 22,
-    textAlign: "center",
-    flexWrap: "wrap",
-    textDecorationLine: "none",
-  },
-
-  bigText: {
-    color: "white",
-    fontFamily: "Raleway_700Bold",
-    fontSize: 26,
-    textAlign: "center",
-    flexWrap: "wrap",
-    textDecorationLine: "none",
-  },
-
-  profileImagesCtn: {
-    marginLeft: "10%",
-    marginRight: "10%",
-    width: "80%",
-    height: "65%",
-    backgroundColor: "rgb(42, 48, 54)",
-    borderRadius: 6,
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-  },
-
-  profileImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 6,
-    borderWidth: 4,
-    borderColor: "#3EB489",
-  },
-
-  socialsCtn: {
-    marginTop: "4%",
-    marginBottom: "2%",
-    marginLeft: "10%",
-    marginRight: "10%",
-    width: "80%",
-  },
-
-  socialsIcon: {
-    marginTop: "6%",
-    marginBottom: "6%",
-    width: 50,
-    height: 50,
-  },
-});
+const styles = StyleSheet.create(prf_cr_styles);

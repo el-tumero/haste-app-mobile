@@ -55,7 +55,7 @@ export default function Register() {
 
   return (
     <SafeAreaView style={styles.main}>
-      <StatusBar style="dark" />
+      <StatusBar style="auto" />
       <TextInput
         style={styles.input}
         onChangeText={handleChangeUsername}
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 5,
-    borderRadius: 10, // epic radius
+    borderRadius: 10,
     marginLeft: "25%",
     width: "50%",
     borderWidth: 1,

@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { main_styles } from "./Main_styles";
+import { main_styles } from "../styles/Main_styles";
 
 export const MainContext = createContext();
 

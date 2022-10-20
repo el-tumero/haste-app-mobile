@@ -1,7 +1,7 @@
 export default function Welcome() {
-  // check cookies
-  // check if first launch
-  // sign up/sign in
+  // sign up ./ log in
+
+  // nav
 
   return <View></View>;
 }
