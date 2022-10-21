@@ -244,58 +244,71 @@ export default function ProfileCreation() {
   };
 
   const navigateProfileStep = (dir) => {
-    if (dir === 6) console.log("profile created ==> move to main.js");
     if (dir === 1) setRegisterStep(registerStep + 1);
     if (dir === 0) setRegisterStep(registerStep - 1);
   };
 
+  const ProfileCreationBottomBar = ({ prev, next }) => {
+    return (
+      <View style={styles.bottom_bar_container}>
+        {prev ? (
+          <Pressable
+            style={[
+              styles.bottom_bar_pressable,
+              styles.bottom_bar_pressable_left,
+            ]}
+            onPress={() => navigateProfileStep(0)}
+          >
+            <Text>Previous</Text>
+          </Pressable>
+        ) : (
+          <></>
+        )}
+        {next ? (
+          <Pressable
+            style={[
+              styles.bottom_bar_pressable,
+              styles.bottom_bar_pressable_right,
+            ]}
+            onPress={() => navigateProfileStep(1)}
+          >
+            <Text>Next</Text>
+          </Pressable>
+        ) : (
+          <></>
+        )}
+      </View>
+    );
+  };
+
+  // ================= //
   const Step_0 = () => {
     return (
       <SafeAreaView style={styles.main_container}>
-        <Pressable
-          onPress={() => navigateProfileStep(1)}
-          style={styles.pressable}
-        >
-          <Text>NExt</Text>
-        </Pressable>
+        <Text style={styles.title}>STEP 0</Text>
+        <ProfileCreationBottomBar next />
       </SafeAreaView>
     );
   };
+  // ================= //
   const Step_1 = () => {
     return (
       <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 1</Text>
-
-        <Pressable
-          onPress={() => navigateProfileStep(0)}
-          style={styles.pressable}
-        >
-          <Text>Back</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => navigateProfileStep(1)}
-          style={styles.pressable}
-        >
-          <Text>Next</Text>
-        </Pressable>
+        <ProfileCreationBottomBar prev next />
       </SafeAreaView>
     );
   };
-
+  // ================= //
   const Step_2 = () => {
     return (
       <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 2</Text>
-
-        <Pressable
-          onPress={() => navigateProfileStep(0)}
-          style={styles.pressable}
-        >
-          <Text>Back</Text>
-        </Pressable>
+        <ProfileCreationBottomBar prev next />
       </SafeAreaView>
     );
   };
+  // ================= //
 
   const renderProfileStep = () => {
     console.log("register step:" + registerStep);

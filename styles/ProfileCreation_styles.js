@@ -16,6 +16,35 @@ export const prf_cr_styles = {
   bg_light_mode: {
     backgroundColor: colors.light_mode.darker,
   },
+  // ========== //
+  // Bottom Bar //
+  // ========== //
+  bottom_bar_container: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: "auto",
+    width: "100%",
+    height: "10%",
+    backgroundColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  bottom_bar_pressable: {
+    display: "flex",
+    width: "25%",
+    height: "100%",
+    backgroundColor: "red",
+    borderWidth: 2,
+    borderColor: "black",
+  },
+  bottom_bar_pressable_left: {
+    marginRight: "auto",
+    alignSelf: "flex-start",
+  },
+  bottom_bar_pressable_right: {
+    marginLeft: "auto",
+    alignSelf: "flex-end",
+  },
   // ============== //
   // Profile Step 0 //
   // ============== //
