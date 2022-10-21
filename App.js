@@ -6,7 +6,7 @@ import {
   NavigationContainer,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View, useColorScheme } from "react-native";
 import { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import Home, { HomeContext } from "./routes/Home";
@@ -27,15 +27,22 @@ export default function App() {
   const [jwt, setJwt] = useState("");
   const [isFirstLaunch, setIsFirstLaunch] = useState(false);
   const [isFirstLaunchIsLoading, setIsFirstLaunchIsLoading] = useState(true);
+  const colorScheme = useColorScheme();
 
   async function checkIfFirstLaunch() {
     try {
       const hasFirstLaunched = await AsyncStorage.getItem("FIRST_LAUNCH");
       if (hasFirstLaunched === null) {
+        const hasFirstLaunched = await AsyncStorage.setItem(
+          "FIRST_LAUNCH",
+          "true"
+        );
         return true;
       }
+      await AsyncStorage.setItem("FIRST_LAUNCH", "false");
       return false;
     } catch (error) {
+      console.log(error);
       return false;
     }
   }
@@ -46,6 +53,7 @@ export default function App() {
     setIsFirstLaunch(firstLaunch);
     setIsFirstLaunchIsLoading(false);
     console.log(`first time launching? : ` + firstLaunch);
+    console.log(`theme: ` + colorScheme);
   }
 
   const getDeviceInfo = () => {
