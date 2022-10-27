@@ -9,7 +9,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Button, StyleSheet, Text, View, useColorScheme } from "react-native";
 import { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import Home, { HomeContext } from "./routes/Home";
+import Home, { HomeContext } from "./components/Home";
 import RegisterPage, { RegisterContext } from "./components/Register";
 import Login, { LoginContext } from "./components/Login";
 import ProfileCreation, {
@@ -17,6 +17,8 @@ import ProfileCreation, {
 } from "./components/ProfileCreation/ProfileCreation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Device from "expo-device";
+import Register from "./components/Register";
+import Welcome from "./components/Welcome";
 
 const Stack = createNativeStackNavigator();
 // SplashScreen.preventAutoHideAsync(); // splash for later
@@ -70,6 +72,7 @@ export default function App() {
 
     return () => {
       console.log("starting...");
+      console.log(colorScheme);
     };
   }, []);
 

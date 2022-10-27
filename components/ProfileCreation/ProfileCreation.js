@@ -22,6 +22,8 @@ import facebook from "../../assets/socials/facebook.png";
 import instagram from "../../assets/socials/instagram.png";
 import snapchat from "../../assets/socials/snapchat.png";
 import telegram from "../../assets/socials/telegram.png";
+import left_arrow from "../../assets/icons/dark_mode/left_arrow.png";
+import right_arrow from "../../assets/icons/dark_mode/right_arrow.png";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -45,6 +47,7 @@ import { colors } from "../../styles/Colors";
 import { ReggaeOne_400Regular } from "@expo-google-fonts/dev";
 import { registerErrorHandlers } from "expo-dev-client";
 import { registerRootComponent } from "expo";
+import { global_styles } from "../../styles/global";
 
 export default function ProfileCreation() {
   // Evaluate device system theme
@@ -254,7 +257,7 @@ export default function ProfileCreation() {
             ]}
             onPress={() => navigateProfileStep(0)}
           >
-            <Text>Previous</Text>
+            <Image source={left_arrow} style={prf_cr_styles.arrow_icon}></Image>
           </Pressable>
         ) : (
           <></>
@@ -267,7 +270,10 @@ export default function ProfileCreation() {
             ]}
             onPress={() => navigateProfileStep(1)}
           >
-            <Text>Next</Text>
+            <Image
+              source={right_arrow}
+              style={prf_cr_styles.arrow_icon}
+            ></Image>
           </Pressable>
         ) : (
           <></>
@@ -289,23 +295,25 @@ export default function ProfileCreation() {
     };
 
     return (
-      <SafeAreaView style={styles.main_container}>
-        <Text style={styles.title}>STEP 0</Text>
-        <TextInput
-          underlineColorAndroid="transparent"
-          style={styles.textinput_basic}
-          placeholder="Twoje imię"
-          placeholderTextColor="grey"
-          autoCorrect={false}
-          autoCapitalize={true}
-          onChangeText={onChangeName}
-          defaultValue={userData.firstName}
-        />
+      <SafeAreaView style={styles.safe_area}>
+        <View style={styles.main_container}>
+          <Text style={styles.title}>STEP 0</Text>
+          <TextInput
+            underlineColorAndroid="transparent"
+            style={styles.textinput_basic}
+            placeholder="Twoje imię"
+            placeholderTextColor="grey"
+            autoCorrect={false}
+            autoCapitalize={true}
+            onChangeText={onChangeName}
+            defaultValue={userData.firstName}
+          />
 
-        <Pressable onPress={onSubmit}>
-          <Text>SUBMIT</Text>
-        </Pressable>
-        <ProfileCreationBottomBar next />
+          <Pressable onPress={onSubmit}>
+            <Text>SUBMIT</Text>
+          </Pressable>
+          <ProfileCreationBottomBar next />
+        </View>
       </SafeAreaView>
     );
   };

@@ -1,4 +1,5 @@
 import { colors } from "./Colors";
+import { Platform, Dimensions } from "react-native";
 
 export const prf_cr_styles = {
   // ====== //
@@ -16,13 +17,21 @@ export const prf_cr_styles = {
   bg_light_mode: {
     backgroundColor: colors.light_mode.darker,
   },
+  safe_area: {
+    backgroundColor: "",
+  },
   main_container: {
-    flex: 1,
-    padding: 25,
+    paddingTop: Platform.OS === "android" ? 22 : 4,
+    display: "flex",
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.dark_mode.main,
   },
   textinput_basic: {
+    width: 100,
+    height: 40,
     backgroundColor: "grey",
   },
 
@@ -35,33 +44,26 @@ export const prf_cr_styles = {
     flexDirection: "row",
     flexWrap: "nowrap",
     marginTop: "auto",
-    width: "100%",
+    width: "auto",
     height: "3%",
-    marginBottom: "3%",
-    backgroundColor: "grey",
-    borderWidth: 1,
-    borderRadius: 10,
+    paddingBottom: 64,
   },
   bottom_bar_pressable: {
     display: "flex",
-    width: "20%",
-    height: "200%",
-    backgroundColor: "green",
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 200,
+    width: "22%",
     justifyContent: "center",
     alignItems: "center",
-    transform: [{ translateY: -10 }],
+  },
+  arrow_icon: {
+    width: 48,
+    height: 48,
+    tintColor: colors.accent_color,
   },
   bottom_bar_pressable_left: {
     marginRight: "auto",
-    // alignSelf: "flex-start",
   },
   bottom_bar_pressable_right: {
     marginLeft: "auto",
-    // alignSelf: "flex-end",
-    // transform: [{ translateY: 10 }, { translateX: 2 }],
   },
   // ============== //
   // Profile Step 0 //
@@ -73,6 +75,8 @@ export const prf_cr_styles = {
     borderWidth: 2,
   },
   title: {
+    margin: 10,
+    color: colors.dark_mode.text,
     alignSelf: "center",
     fontSize: 30,
   },

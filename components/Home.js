@@ -11,7 +11,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { main_styles } from "../styles/Main_styles";
 
-export const MainContext = createContext();
+export const HomeContext = createContext();
 
 export default function Home() {
   return (
