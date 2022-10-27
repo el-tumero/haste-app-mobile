@@ -14,6 +14,7 @@ import {
   Image,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import ProfileCreation from "./ProfileCreation/ProfileCreation";
 
 export const RegisterContext = createContext();
 export default function Register() {
@@ -21,6 +22,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [qrcode, setQrcode] = useState("");
   const [UUID, setUUID] = useState("");
+  const [accountCreatedSuccess, setAccountCreatedSuccess] = useState(false);
 
   const handleChangeUsername = (username) => {
     setUsername(username);
@@ -36,56 +38,64 @@ export default function Register() {
     const encryptedSecret = AES.encrypt(secret, password).toString();
     setQrcode(uri);
     console.log(username, encryptedSecret);
-
-    axios
-      .post("https://tumer.pl/user", {
-        username,
-        secret: encryptedSecret,
-      })
-      .then((response) => {
-        console.log(response.data);
-
-        if (response.status == 200) {
-          console.log(response.data);
-          console.log("successfully created user!");
-          // go to profile creation
-        }
-      });
+    setAccountCreatedSuccess(true);
+    // axios
+    //   .post("https://tumer.pl/user", {
+    //     username,
+    //     secret: encryptedSecret,
+    //   })
+    //   .then((response) => {
+    //     console.log(repsonse.data);
+    //     if (response.status == 200) {
+    //       console.log(response.data);
+    //       console.log("successfully created user!");
+    //     }
+    //   });
   };
+  if (accountCreatedSuccess == false) {
+    return (
+      <SafeAreaView style={styles.main}>
+        <StatusBar style="auto" />
+        <TextInput
+          style={styles.input}
+          onChangeText={handleChangeUsername}
+          placeholder="Username"
+          autoCapitalize={false}
+          autoCorrect={false}
+        ></TextInput>
 
-  return (
-    <SafeAreaView style={styles.main}>
-      <StatusBar style="auto" />
-      <TextInput
-        style={styles.input}
-        onChangeText={handleChangeUsername}
-        placeholder="Username"
-        autoCapitalize={false}
-        autoCorrect={false}
-      ></TextInput>
+        <TextInput
+          style={styles.input}
+          onChangeText={handleChangePassword}
+          placeholder="Password"
+          secureTextEntry={true}
+          autoCapitalize={false}
+          autoCorrect={false}
+        ></TextInput>
 
-      <TextInput
-        style={styles.input}
-        onChangeText={handleChangePassword}
-        placeholder="Password"
-        secureTextEntry={true}
-        autoCapitalize={false}
-        autoCorrect={false}
-      ></TextInput>
+        <Pressable onPress={handleRegisterSubmit} style={styles.button}>
+          <Text style={styles.text}>REGISTER</Text>
+        </Pressable>
 
-      <Pressable onPress={handleRegisterSubmit} style={styles.button}>
-        <Text style={styles.text}>REGISTER</Text>
-      </Pressable>
+        <Pressable
+          onPress={() => getValueFor("DEVICE_ID")}
+          style={styles.button}
+        >
+          <Text style={styles.text}>getValue</Text>
+        </Pressable>
 
-      <Pressable onPress={() => getValueFor("DEVICE_ID")} style={styles.button}>
-        <Text style={styles.text}>getValue</Text>
-      </Pressable>
-
-      <View style={styles.qrCtn}>
-        <QRCode value={qrcode} size={100} bgColor="#FFFFFF" fgColor="#000000" />
-      </View>
-    </SafeAreaView>
-  );
+        <View style={styles.qrCtn}>
+          <QRCode
+            value={qrcode}
+            size={100}
+            bgColor="#FFFFFF"
+            fgColor="#000000"
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+  return <ProfileCreation />;
 }
 
 const styles = StyleSheet.create({

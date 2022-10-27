@@ -16,43 +16,56 @@ export const prf_cr_styles = {
   bg_light_mode: {
     backgroundColor: colors.light_mode.darker,
   },
+  main_container: {
+    flex: 1,
+    padding: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textinput_basic: {
+    backgroundColor: "grey",
+  },
+
   // ========== //
   // Bottom Bar //
   // ========== //
   bottom_bar_container: {
     display: "flex",
+    justifyContent: "space-between",
     flexDirection: "row",
+    flexWrap: "nowrap",
     marginTop: "auto",
     width: "100%",
-    height: "10%",
+    height: "3%",
+    marginBottom: "3%",
     backgroundColor: "grey",
     borderWidth: 1,
     borderRadius: 10,
   },
   bottom_bar_pressable: {
     display: "flex",
-    width: "25%",
-    height: "100%",
-    backgroundColor: "red",
+    width: "20%",
+    height: "200%",
+    backgroundColor: "green",
     borderWidth: 2,
     borderColor: "black",
+    borderRadius: 200,
+    justifyContent: "center",
+    alignItems: "center",
+    transform: [{ translateY: -10 }],
   },
   bottom_bar_pressable_left: {
     marginRight: "auto",
-    alignSelf: "flex-start",
+    // alignSelf: "flex-start",
   },
   bottom_bar_pressable_right: {
     marginLeft: "auto",
-    alignSelf: "flex-end",
+    // alignSelf: "flex-end",
+    // transform: [{ translateY: 10 }, { translateX: 2 }],
   },
   // ============== //
   // Profile Step 0 //
   // ============== //
-  main_container: {
-    width: "100%",
-    height: "100%",
-    padding: 20,
-  },
   pressable: {
     width: 50,
     height: 30,

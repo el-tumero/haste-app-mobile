@@ -15,7 +15,6 @@ import Login, { LoginContext } from "./components/Login";
 import ProfileCreation, {
   ProfileCreationContext,
 } from "./components/ProfileCreation/ProfileCreation";
-import Main, { MainContext } from "./components/Main";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Device from "expo-device";
 
@@ -97,17 +96,17 @@ export default function App() {
   //   );
   // } else {
   return (
-    <MainContext.Provider value={setLogged}>
+    <HomeContext.Provider value={setLogged}>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="ProfileCr"
+            name="testing"
             component={ProfileCreation}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </MainContext.Provider>
+    </HomeContext.Provider>
   );
   // }
 }
