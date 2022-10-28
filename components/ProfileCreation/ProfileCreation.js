@@ -56,10 +56,6 @@ export default function ProfileCreation() {
   // All userData states in order
   const [registerStep, setRegisterStep] = useState(0);
 
-  // const [birthDate, setBirthDate] = useState("");
-  // const [birthDateDay, setBirthDateDay] = useState("");
-  // const [birthDateMonth, setBirthDateMonth] = useState("");
-  // const [birthDateYear, setBirthDateYear] = useState("");
   // const [location, setLocation] = useState(null);
   // const [sex, setSex] = useState("");
   // const [target, setTarget] = useState("");
@@ -89,7 +85,7 @@ export default function ProfileCreation() {
   // USERDATA STATE BIG
   const [userData, setUserData] = useState({
     firstName: "",
-    birthDate: new Date(),
+    birthDate: undefined,
     sex: "",
     target: "",
     intimacy: "",
@@ -219,34 +215,35 @@ export default function ProfileCreation() {
   //   setInterests([...interests, interest]);
   // };
 
-  // const handleBirthDateChange = (dateType) => (input) => {
-  //   if (dateType == "DD") {
-  //     setBirthDateDay(input);
-  //   }
-  //   if (dateType == "MM") {
-  //     setBirthDateMonth(input);
-  //   }
-  //   if (dateType == "YYYY") {
-  //     setBirthDateYear(input);
-  //   }
-  // };
-
-  // (varToUpdate, dataToSubmit)
-  const submitProfileStepData = (object, dataSubmitted) => {
-    console.log("updating userData...");
-    setUserData((prev) => ({
-      ...prev,
-      firstName: dataSubmitted,
-    }));
+  const updateUserData = (_objToUpdate) => {
+    console.log("UPDATING USERDATA");
+    console.log(_objToUpdate);
+    // Format birthDate for userData
+    if (_objToUpdate.birthDate !== undefined) {
+      const temp = _objToUpdate.birthDate.join(" ");
+      _objToUpdate.birthDate = temp;
+      // console.log(_objToUpdate.birthDate);
+    }
+    for (const [key, value] of Object.entries(_objToUpdate)) {
+      console.log("keyvalue:");
+      console.log(key, value);
+      setUserData((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    }
     console.log(userData);
   };
 
-  const navigateProfileStep = (dir) => {
-    if (dir === 1) setRegisterStep(registerStep + 1);
+  const navigateProfileStep = (dir, _objToUpdate) => {
+    if (dir === 1) {
+      setRegisterStep(registerStep + 1);
+      updateUserData(_objToUpdate);
+    }
     if (dir === 0) setRegisterStep(registerStep - 1);
   };
 
-  const ProfileCreationBottomBar = ({ prev, next }) => {
+  const ProfileCreationBottomBar = ({ prev, next, _objToUpdate }) => {
     return (
       <View style={styles.bottom_bar_container}>
         {prev ? (
@@ -255,7 +252,7 @@ export default function ProfileCreation() {
               styles.bottom_bar_pressable,
               styles.bottom_bar_pressable_left,
             ]}
-            onPress={() => navigateProfileStep(0)}
+            onPress={() => navigateProfileStep(0, _objToUpdate)}
           >
             <Image source={left_arrow} style={prf_cr_styles.arrow_icon}></Image>
           </Pressable>
@@ -268,7 +265,7 @@ export default function ProfileCreation() {
               styles.bottom_bar_pressable,
               styles.bottom_bar_pressable_right,
             ]}
-            onPress={() => navigateProfileStep(1)}
+            onPress={() => navigateProfileStep(1, _objToUpdate)}
           >
             <Image
               source={right_arrow}
@@ -281,38 +278,118 @@ export default function ProfileCreation() {
       </View>
     );
   };
+
   // ====== //
-  const Step_0 = ({ userData, Submit }) => {
+  const Step_0 = () => {
+    const [changesMade, setChangesMade] = useState(false);
     const [firstName, setFirstName] = useState("");
 
-    const onChangeName = (name) => {
-      setFirstName(name);
+    const [birthDateDay, setBirthDateDay] = useState("");
+    const [birthDateMonth, setBirthDateMonth] = useState("");
+    const [birthDateYear, setBirthDateYear] = useState("");
+
+    const dataToUpdate = {
+      firstName: firstName,
+      birthDate: [birthDateDay, birthDateMonth, birthDateYear],
     };
 
-    const onSubmit = () => {
-      console.log(firstName);
-      Submit("firstName", firstName);
+    const onChangeName = (name) => {
+      setChanges();
+      setFirstName(name);
+      console.log(userData.birthDate);
+    };
+
+    const handleBirthDateChange = (dateType) => (input) => {
+      if (
+        birthDateDay.length > 0 &&
+        birthDateMonth.length > 0 &&
+        birthDateYear.length >= 3
+      ) {
+        setChanges();
+      }
+      if (dateType == "DD") {
+        setBirthDateDay(input);
+      }
+      if (dateType == "MM") {
+        setBirthDateMonth(input);
+      }
+      if (dateType == "YYYY") {
+        setBirthDateYear(input);
+      }
+    };
+
+    const setChanges = () => {
+      setChangesMade(true);
     };
 
     return (
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.main_container}>
           <Text style={styles.title}>STEP 0</Text>
-          <TextInput
-            underlineColorAndroid="transparent"
-            style={styles.textinput_basic}
-            placeholder="Twoje imię"
-            placeholderTextColor="grey"
-            autoCorrect={false}
-            autoCapitalize={true}
-            onChangeText={onChangeName}
-            defaultValue={userData.firstName}
+          <View style={styles.content}>
+            <TextInput
+              underlineColorAndroid="transparent"
+              style={[styles.textinput_basic, styles.textinput_long_padding]}
+              placeholder="Twoje imię"
+              placeholderTextColor="grey"
+              autoCorrect={false}
+              autoCapitalize={true}
+              onChangeText={onChangeName}
+              defaultValue={userData.firstName}
+              maxLength={20}
+            />
+            <View style={styles.date_input_container}>
+              <TextInput
+                placeholder="DD"
+                underlineColorAndroid="transparent"
+                style={[styles.textinput_basic, styles.textinput_date_padding]}
+                placeholderTextColor="grey"
+                autoCorrect={false}
+                onChangeText={handleBirthDateChange("DD")}
+                defaultValue={
+                  userData.birthDate !== undefined
+                    ? userData.birthDate.substring(0, 2)
+                    : ""
+                }
+                maxLength={2}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                placeholder="MM"
+                underlineColorAndroid="transparent"
+                style={[styles.textinput_basic, styles.textinput_date_padding]}
+                placeholderTextColor="grey"
+                autoCorrect={false}
+                onChangeText={handleBirthDateChange("MM")}
+                defaultValue={
+                  userData.birthDate !== undefined
+                    ? userData.birthDate.substring(3, 5)
+                    : ""
+                }
+                maxLength={2}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                placeholder="YYYY"
+                underlineColorAndroid="transparent"
+                style={[styles.textinput_basic, styles.textinput_date_padding]}
+                placeholderTextColor="grey"
+                autoCorrect={false}
+                onChangeText={handleBirthDateChange("YYYY")}
+                defaultValue={
+                  userData.birthDate !== undefined
+                    ? userData.birthDate.substring(6, 10)
+                    : ""
+                }
+                maxLength={4}
+                keyboardType="number-pad"
+              />
+            </View>
+          </View>
+          <ProfileCreationBottomBar
+            next
+            _objToUpdate={changesMade ? dataToUpdate : ""}
           />
-
-          <Pressable onPress={onSubmit}>
-            <Text>SUBMIT</Text>
-          </Pressable>
-          <ProfileCreationBottomBar next />
         </View>
       </SafeAreaView>
     );
@@ -388,7 +465,7 @@ export default function ProfileCreation() {
     switch (registerStep) {
       case 0:
         console.log("rendering step 0");
-        return <Step_0 userData={userData} Submit={submitProfileStepData} />;
+        return <Step_0 userData={userData} />;
       case 1:
         return <Step_1 userData={userData} />;
       case 2:

@@ -7,8 +7,9 @@ export const colors = {
   },
   dark_mode: {
     text: "#ffffff",
-    text_inactive: "#e6e6e6",
-    main: "#14191f",
+    text_inactive: "#cccccc",
+    main: "#0e1217",
+    // main: "#14191f",
     lightest: "#19212b",
     lighter: "#151d24",
     darker: "#0f1419",
