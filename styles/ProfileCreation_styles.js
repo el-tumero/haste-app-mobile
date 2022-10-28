@@ -81,6 +81,28 @@ export const prf_cr_styles = {
   font_xl: {
     fontSize: 24,
   },
+  font_xxl: {
+    fontSize: 28,
+  },
+  font_xxxl: {
+    fontSize: 34,
+  },
+  pressable: {
+    width: "auto",
+    height: "auto",
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    marginHorizontal: 10,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.dark_mode.text_inactive,
+  },
+  pressable_active: {
+    borderColor: colors.accent_color,
+  },
+  margin_vertical: {
+    marginVertical: 8,
+  },
   date_input_container: {
     display: "flex",
     justifyContent: "center",
@@ -128,23 +150,31 @@ export const prf_cr_styles = {
   bottom_bar_pressable_right: {
     marginLeft: "auto",
   },
-  // ============== //
-  // Profile Step 0 //
-  // ============== //
-  pressable: {
-    width: "auto",
-    height: "auto",
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    marginHorizontal: 10,
+  // ================== //
+  // Welcome page/Modal //
+  // ================== //
+  welcome_title: {
+    marginBottom: 24,
+  },
+  modal_container: {
+    display: "flex",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "auto",
+    marginBottom: "auto",
+    width: "70%",
+    height: "70%",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 16,
     borderWidth: 2,
-    borderRadius: 10,
-    borderColor: colors.dark_mode.text_inactive,
+    backgroundColor: colors.dark_mode.lightest,
+    borderColor: colors.dark_mode.main,
   },
-  pressable_active: {
-    borderColor: colors.accent_color,
-  },
-  margin_vertical: {
-    marginVertical: 8,
+  modal_close_btn: {
+    width: 32,
+    height: 32,
+    tintColor: colors.dark_mode.darker,
+    marginVertical: 12,
   },
 };

@@ -12,9 +12,9 @@ import * as SecureStore from "expo-secure-store";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
-export const LoginContext = createContext();
+export const SignInContext = createContext();
 
-export default function Login() {
+export default function SignIn() {
   const [username, setUsername] = useState("teaver00"); // for debugging purposes
   const [password, setPassword] = useState("12345678"); // for debugging purposes
   const [token, setToken] = useState("");

@@ -14,16 +14,16 @@ import {
   setStatusBarNetworkActivityIndicatorVisible,
   StatusBar,
 } from "expo-status-bar";
-import Home, { HomeContext } from "../Home";
+import Home, { HomeContext } from "./Home";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
-import facebook from "../../assets/socials/facebook.png";
-import instagram from "../../assets/socials/instagram.png";
-import snapchat from "../../assets/socials/snapchat.png";
-import telegram from "../../assets/socials/telegram.png";
-import left_arrow from "../../assets/icons/dark_mode/left_arrow.png";
-import right_arrow from "../../assets/icons/dark_mode/right_arrow.png";
+import facebook from "../assets/socials/facebook.png";
+import instagram from "../assets/socials/instagram.png";
+import snapchat from "../assets/socials/snapchat.png";
+import telegram from "../assets/socials/telegram.png";
+import left_arrow from "../assets/icons/dark_mode/left_arrow.png";
+import right_arrow from "../assets/icons/dark_mode/right_arrow.png";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -42,11 +42,11 @@ export const ProfileCreationContext = createContext();
 const Stack = createNativeStackNavigator();
 
 // Import styles from ../styles + colors
-import { prf_cr_styles } from "../../styles/ProfileCreation_styles";
+import { prf_cr_styles } from "../styles/ProfileCreation_styles";
 import { ReggaeOne_400Regular } from "@expo-google-fonts/dev";
 import { registerErrorHandlers } from "expo-dev-client";
 import { registerRootComponent } from "expo";
-import { global_styles } from "../../styles/global";
+import { global_styles } from "../styles/global";
 
 export default function ProfileCreation() {
   // Evaluate device system theme
@@ -56,11 +56,7 @@ export default function ProfileCreation() {
   const [registerStep, setRegisterStep] = useState(0);
 
   // const [intimacy, setIntimacy] = useState("");
-  // const [interests, setInterests] = useState([]);
-  // const [interestsCounter, setInterestsCounter] = useState(0);
-  // const [photos, setPhotos] = useState([]);
   // const [bio, setBio] = useState("");
-  // const date = new Date();
   // const [socials, setSocials] = useState({
   //   instagram: undefined,
   //   facebook: undefined,
@@ -72,10 +68,7 @@ export default function ProfileCreation() {
   // });
   // OTHER STATES (MISC)
 
-  // const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  // const [image, setImage] = useState(null);
   // const [bioCounter, setBioCounter] = useState(0);
-  // const [isPressed, setIsPressed] = useState(false);
 
   // USERDATA STATE BIG
   const [userData, setUserData] = useState({
@@ -103,59 +96,6 @@ export default function ProfileCreation() {
   //   console.log("FAILED TO LOAD FONTS (!)");
   //   return null;
   // }
-
-  // const pickImage = async () => {
-  //   // No permissions request is necessary for launching the image library
-  //   const result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     base64: true,
-  //     quality: 1,
-  //     aspect: [1, 1],
-  //   });
-
-  //   if (!result.cancelled) {
-  //     setImage(result.base64);
-  //   }
-  // };
-
-  // // ProfileStep evaluation processs
-  // const evaluateStep = (stepIndex) => {
-  //   setUserData({
-  //     firstName,
-  //     birthDate,
-  //     location,
-  //     sex,
-  //     target,
-  //     intimacy,
-  //     interests,
-  //     photos: [image],
-  //     bio,
-  //     socials: JSON.stringify(socials),
-  //   });
-  //   setRegisterStep((registerStep) => registerStep + 1);
-
-  //   // Check for errors in each step
-  //   switch (stepIndex) {
-  //     case 0:
-  //       console.log(`checking for err's in 0`);
-  //       break;
-  //     case 1:
-  //       console.log(`checking for err's in 1`);
-  //       break;
-  //     default:
-  //       console.log("does this even work? ");
-  //   }
-  // };
-
-  // const handleTargetChange = (target) => {
-  //   setTarget(target);
-  //   console.log(target);
-  // };
-
-  // const handleIntimacyChange = (intimacy) => {
-  //   setIntimacy(intimacy);
-  //   console.log(intimacy);
-  // };
 
   // const handleBioChange = (bio) => {
   //   setBio(bio);
@@ -398,9 +338,6 @@ export default function ProfileCreation() {
     const checkUserData = () => {
       if (userData.sex !== "") setSelectedBtnSex(userData.sex);
       if (userData.target !== "") setSelectedBtnTarget(userData.target);
-      // console.log(userData);
-      // console.log(userData.sex);
-      // console.log(userData.target);
     };
 
     const handleGeolocationGet = async () => {
@@ -520,17 +457,55 @@ export default function ProfileCreation() {
   };
   // ====== //
   const Step_2 = () => {
+    // PHOTOS + INTERESTS
+
+    useEffect(() => {
+      checkUserData();
+    }, []);
+
+    const [interests, setInterests] = useState([]);
+    const [interestsCounter, setInterestsCounter] = useState(0);
+    const [photos, setPhotos] = useState([]);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [image, setImage] = useState(null);
+    const [changesMade, setChangesMade] = useState(false);
+    const dataToUpdate = {};
+
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        base64: true,
+        quality: 1,
+        aspect: [1, 1],
+      });
+
+      if (!result.cancelled) {
+        setImage(result.base64);
+      }
+    };
+
+    const checkUserData = () => {};
+
     const debug = () => {
       console.log(userData);
     };
 
     return (
-      <SafeAreaView style={styles.main_container}>
-        <Text style={styles.title}>STEP 2</Text>
-        <Pressable onPress={debug}>
-          <Text>LOG uD</Text>
-        </Pressable>
-        <ProfileCreationBottomBar prev next />
+      <SafeAreaView style={styles.safe_area}>
+        <View style={styles.main_container}>
+          <Text style={styles.title}>STEP 2</Text>
+          <View style={styles.content}>
+            <Pressable onPress={debug}>
+              <Text>LOG uD</Text>
+            </Pressable>
+          </View>
+          <ProfileCreationBottomBar
+            prev
+            next
+            _objToUpdate={changesMade ? dataToUpdate : ""}
+          />
+        </View>
       </SafeAreaView>
     );
   };
@@ -540,7 +515,7 @@ export default function ProfileCreation() {
     return (
       <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 3</Text>
-        <ProfileCreationBottomBar prev next />
+        <ProfileCreationBottomBar prev next _objToUpdate={""} />
       </SafeAreaView>
     );
   };
@@ -550,7 +525,7 @@ export default function ProfileCreation() {
     return (
       <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 4</Text>
-        <ProfileCreationBottomBar prev next />
+        <ProfileCreationBottomBar prev next _objToUpdate={""} />
       </SafeAreaView>
     );
   };
@@ -560,7 +535,7 @@ export default function ProfileCreation() {
     return (
       <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 5</Text>
-        <ProfileCreationBottomBar prev next />
+        <ProfileCreationBottomBar prev next _objToUpdate={""} />
       </SafeAreaView>
     );
   };
@@ -570,7 +545,7 @@ export default function ProfileCreation() {
     return (
       <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 6</Text>
-        <ProfileCreationBottomBar prev next />
+        <ProfileCreationBottomBar prev next _objToUpdate={""} />
       </SafeAreaView>
     );
   };

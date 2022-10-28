@@ -9,15 +9,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Button, StyleSheet, Text, View, useColorScheme } from "react-native";
 import { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
+
 import Home, { HomeContext } from "./components/Home";
-import RegisterPage, { RegisterContext } from "./components/Register";
-import Login, { LoginContext } from "./components/Login";
+import SignUp, { SignUpContext } from "./components/SignUp";
+import SignIn, { SignInContext } from "./components/SignIn";
 import ProfileCreation, {
   ProfileCreationContext,
-} from "./components/ProfileCreation/ProfileCreation";
+} from "./components/ProfileCreation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Device from "expo-device";
-import Register from "./components/Register";
 import Welcome from "./components/Welcome";
 
 const Stack = createNativeStackNavigator();
@@ -99,17 +99,17 @@ export default function App() {
   //   );
   // } else {
   return (
-    <HomeContext.Provider value={setLogged}>
+    <SignUpContext.Provider value={setLogged}>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="testing"
-            component={ProfileCreation}
+            name="Welcome"
+            component={Welcome}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </HomeContext.Provider>
+    </SignUpContext.Provider>
   );
   // }
 }
