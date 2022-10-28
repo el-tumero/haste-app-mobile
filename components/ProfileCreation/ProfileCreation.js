@@ -43,7 +43,6 @@ const Stack = createNativeStackNavigator();
 
 // Import styles from ../styles + colors
 import { prf_cr_styles } from "../../styles/ProfileCreation_styles";
-import { colors } from "../../styles/Colors";
 import { ReggaeOne_400Regular } from "@expo-google-fonts/dev";
 import { registerErrorHandlers } from "expo-dev-client";
 import { registerRootComponent } from "expo";
@@ -56,9 +55,6 @@ export default function ProfileCreation() {
   // All userData states in order
   const [registerStep, setRegisterStep] = useState(0);
 
-  // const [location, setLocation] = useState(null);
-  // const [sex, setSex] = useState("");
-  // const [target, setTarget] = useState("");
   // const [intimacy, setIntimacy] = useState("");
   // const [interests, setInterests] = useState([]);
   // const [interestsCounter, setInterestsCounter] = useState(0);
@@ -79,7 +75,6 @@ export default function ProfileCreation() {
   // const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   // const [image, setImage] = useState(null);
   // const [bioCounter, setBioCounter] = useState(0);
-  // const [errorMsg, setErrorMsg] = useState(null);
   // const [isPressed, setIsPressed] = useState(false);
 
   // USERDATA STATE BIG
@@ -95,10 +90,6 @@ export default function ProfileCreation() {
     socials: [],
     bio: "",
   });
-
-  // useEffect(() => {
-  //   console.log(userData.firstName);
-  // }, [userData]);
 
   // LOADING FONTS
   // let [fontsLoaded] = useFonts({
@@ -124,32 +115,6 @@ export default function ProfileCreation() {
 
   //   if (!result.cancelled) {
   //     setImage(result.base64);
-  //   }
-  // };
-
-  // const nameToUppercase = () => {
-  //   setFirstName(firstName.charAt(0).toUpperCase() + firstName.slice(1));
-  // };
-
-  // const handleGeolocationAccess = async () => {
-  //   let { status } = await Location.requestForegroundPermissionsAsync();
-  //   console.log(status);
-  //   if (status !== "granted") {
-  //     setErrorMsg("Permission to access location was denied");
-  //     return;
-  //   }
-  // };
-
-  // const handleGeolocationGet = async () => {
-  //   try {
-  //     let location = await Location.getCurrentPositionAsync({
-  //       accuracy: Location.Accuracy.Highest,
-  //       maximumAge: 10000,
-  //     });
-  //     console.log(location);
-  //     setLocation([location.coords.longitude, location.coords.latitude]);
-  //   } catch (error) {
-  //     console.log(error);
   //   }
   // };
 
@@ -180,11 +145,6 @@ export default function ProfileCreation() {
   //     default:
   //       console.log("does this even work? ");
   //   }
-  // };
-
-  // const handleSexChange = (sex) => {
-  //   setSex(sex);
-  //   console.log(sex);
   // };
 
   // const handleTargetChange = (target) => {
@@ -289,14 +249,13 @@ export default function ProfileCreation() {
     const [birthDateYear, setBirthDateYear] = useState("");
 
     const dataToUpdate = {
-      firstName: firstName,
+      firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1),
       birthDate: [birthDateDay, birthDateMonth, birthDateYear],
     };
 
     const onChangeName = (name) => {
       setChanges();
       setFirstName(name);
-      console.log(userData.birthDate);
     };
 
     const handleBirthDateChange = (dateType) => (input) => {
@@ -396,25 +355,181 @@ export default function ProfileCreation() {
   };
   // ====== //
   const Step_1 = () => {
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [changesMade, setChangesMade] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [sex, setSex] = useState("");
+    const [selectedBtnSex, setSelectedBtnSex] = useState("");
+    const [target, setTarget] = useState("");
+    const [selectedBtnTarget, setSelectedBtnTarget] = useState("");
+
+    const dataToUpdate = {
+      location: location,
+      sex: sex,
+      target: target,
+    };
+
+    // Get user's location (will ask for permission first)
+    useEffect(() => {
+      checkUserData();
+
+      const askForLocationAccess = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        console.log(status);
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+        console.log("GETTING USER's LOCATION");
+        handleGeolocationGet();
+      };
+
+      askForLocationAccess();
+    }, []);
+
+    // Check if required data is provided (step 0 needs fix)
+    useEffect(() => {
+      if (sex !== "" && target !== "") {
+        console.log("REQUIRED DATA");
+        setChangesMade(true);
+      }
+    }, [sex, target]);
+
+    const checkUserData = () => {
+      if (userData.sex !== "") setSelectedBtnSex(userData.sex);
+      if (userData.target !== "") setSelectedBtnTarget(userData.target);
+      // console.log(userData);
+      // console.log(userData.sex);
+      // console.log(userData.target);
+    };
+
+    const handleGeolocationGet = async () => {
+      try {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Highest,
+          maximumAge: 10000,
+        });
+        // console.log(location);
+        setLocation([location.coords.longitude, location.coords.latitude]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const handleSexChange = (s) => {
+      setSex(s);
+      setSelectedBtnSex(s);
+    };
+
+    const handleTargetChange = (t) => {
+      setTarget(t);
+      setSelectedBtnTarget(t);
+    };
+
+    return (
+      <SafeAreaView style={styles.safe_area}>
+        <View style={styles.main_container}>
+          <Text style={styles.title}>STEP 1</Text>
+          <View style={styles.content}>
+            <Text style={[styles.text_basic, styles.font_lg]}>Jestem</Text>
+            <View
+              style={[styles.flex_horizontal_container, styles.margin_vertical]}
+            >
+              <Pressable
+                style={
+                  selectedBtnSex == "male"
+                    ? [styles.pressable, styles.pressable_active]
+                    : styles.pressable
+                }
+                onPress={() => handleSexChange("male")}
+              >
+                <Text style={[styles.text_basic, styles.font_md]}>
+                  Mężczyzną
+                </Text>
+              </Pressable>
+              <Pressable
+                style={
+                  selectedBtnSex == "female"
+                    ? [styles.pressable, styles.pressable_active]
+                    : styles.pressable
+                }
+                onPress={() => handleSexChange("female")}
+              >
+                <Text style={[styles.text_basic, styles.font_md]}>Kobietą</Text>
+              </Pressable>
+              <Pressable
+                style={
+                  selectedBtnSex == "other"
+                    ? [styles.pressable, styles.pressable_active]
+                    : styles.pressable
+                }
+                onPress={() => handleSexChange("other")}
+              >
+                <Text style={[styles.text_basic, styles.font_md]}>Inne</Text>
+              </Pressable>
+            </View>
+            {/* ============== */}
+            <Text style={[styles.text_basic, styles.font_lg]}>
+              Interesują mnie
+            </Text>
+            <View
+              style={[styles.flex_horizontal_container, styles.margin_vertical]}
+            >
+              <Pressable
+                style={
+                  selectedBtnTarget == "men"
+                    ? [styles.pressable, styles.pressable_active]
+                    : styles.pressable
+                }
+                onPress={() => handleTargetChange("men")}
+              >
+                <Text style={[styles.text_basic, styles.font_md]}>
+                  Mężczyźni
+                </Text>
+              </Pressable>
+              <Pressable
+                style={
+                  selectedBtnTarget == "women"
+                    ? [styles.pressable, styles.pressable_active]
+                    : styles.pressable
+                }
+                onPress={() => handleTargetChange("women")}
+              >
+                <Text style={[styles.text_basic, styles.font_md]}>Kobiety</Text>
+              </Pressable>
+              <Pressable
+                style={
+                  selectedBtnTarget == "other"
+                    ? [styles.pressable, styles.pressable_active]
+                    : styles.pressable
+                }
+                onPress={() => handleTargetChange("other")}
+              >
+                <Text style={[styles.text_basic, styles.font_md]}>Inne</Text>
+              </Pressable>
+            </View>
+          </View>
+          <ProfileCreationBottomBar
+            prev
+            next
+            _objToUpdate={changesMade ? dataToUpdate : ""}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  };
+  // ====== //
+  const Step_2 = () => {
     const debug = () => {
       console.log(userData);
     };
 
     return (
       <SafeAreaView style={styles.main_container}>
-        <Text style={styles.title}>STEP 1</Text>
-        <Pressable onPress={debug}>
-          <Text>Debug userdata</Text>
-        </Pressable>
-        <ProfileCreationBottomBar prev next />
-      </SafeAreaView>
-    );
-  };
-  // ====== //
-  const Step_2 = () => {
-    return (
-      <SafeAreaView style={styles.main_container}>
         <Text style={styles.title}>STEP 2</Text>
+        <Pressable onPress={debug}>
+          <Text>LOG uD</Text>
+        </Pressable>
         <ProfileCreationBottomBar prev next />
       </SafeAreaView>
     );

@@ -63,10 +63,35 @@ export const prf_cr_styles = {
     fontSize: 30,
     paddingTop: 14,
   },
+  text_basic: {
+    color: colors.dark_mode.text,
+    alignSelf: "center",
+    marginVertical: 8,
+    lineHeight: 26,
+  },
+  font_sm: {
+    fontSize: 12,
+  },
+  font_md: {
+    fontSize: 16,
+  },
+  font_lg: {
+    fontSize: 20,
+  },
+  font_xl: {
+    fontSize: 24,
+  },
   date_input_container: {
     display: "flex",
     justifyContent: "center",
     width: "100%",
+    height: "auto",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+  },
+  flex_horizontal_container: {
+    display: "flex",
+    width: "auto",
     height: "auto",
     flexDirection: "row",
     flexWrap: "nowrap",
@@ -107,9 +132,19 @@ export const prf_cr_styles = {
   // Profile Step 0 //
   // ============== //
   pressable: {
-    width: 50,
-    height: 30,
-    margin: 10,
+    width: "auto",
+    height: "auto",
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    marginHorizontal: 10,
     borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.dark_mode.text_inactive,
+  },
+  pressable_active: {
+    borderColor: colors.accent_color,
+  },
+  margin_vertical: {
+    marginVertical: 8,
   },
 };
