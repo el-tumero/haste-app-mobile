@@ -104,7 +104,7 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen
             name="Welcome"
-            component={ProfileCreation}
+            component={Welcome}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
