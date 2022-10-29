@@ -18,6 +18,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 import {
   setStatusBarNetworkActivityIndicatorVisible,
   StatusBar,
@@ -61,6 +63,7 @@ import { registerRootComponent } from "expo";
 import { global_styles } from "../styles/global";
 import { LogData } from "react-native/Libraries/LogBox/LogBox";
 import { colors } from "../styles/Colors";
+import { validate } from "uuid";
 
 export default function ProfileCreation() {
   // Evaluate device system theme
@@ -84,6 +87,8 @@ export default function ProfileCreation() {
   const [personality, setPersonality] = useState([
     50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
   ]);
+
+  const [profileCreationComplete, setProfileCreationComplete] = useState(false);
   // profileData
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -92,7 +97,7 @@ export default function ProfileCreation() {
     gender: "",
     targetGender: "",
     lookingFor: "",
-    photos: [],
+    photos: ["123"],
     interests: [],
     socialsList: [],
     bio: "",
@@ -201,6 +206,15 @@ export default function ProfileCreation() {
       setChangesMade(true);
       setFirstName(name);
     };
+
+    const checkToken = async () => {
+      const token = await SecureStore.getItemAsync("hasteToken");
+      console.log(token);
+    };
+
+    useEffect(() => {
+      checkToken();
+    }, []);
 
     useEffect(() => {
       const birthDateFull = [birthDateDay, birthDateMonth, birthDateYear];
@@ -768,18 +782,21 @@ export default function ProfileCreation() {
       logProfileData();
     }, []);
 
-    const [socials, setSocials] = useState({
-      instagram: undefined,
-      facebook: undefined,
-      snapchat: undefined,
-      telegram: undefined,
-      whatsapp: undefined,
-      signal: undefined,
-      discord: undefined,
-    });
+    // const [socials, setSocials] = useState({
+    //   instagram: undefined,
+    //   facebook: undefined,
+    //   snapchat: undefined,
+    //   telegram: undefined,
+    //   whatsapp: undefined,
+    //   signal: undefined,
+    //   discord: undefined,
+    // });
+
+    // testing
+    const [socials, setSocials] = useState(["asdasdasd", "asdasd"]);
 
     const dataToUpdate = {
-      socials: socials,
+      socialsList: socials,
     };
 
     const handleSocialInput = (social) => (input) => {
@@ -939,6 +956,28 @@ export default function ProfileCreation() {
     );
   };
 
+  const CreateProfile = () => {
+    useEffect(() => {
+      console.log(profileData);
+      test();
+    }, []);
+
+    const test = async () => {
+      try {
+        const jwt = await SecureStore.getItemAsync("hasteToken");
+        const res = await axios.post(`https://tumer.pl/profile`, profileData, {
+          headers: {
+            Cookie: jwt,
+          },
+        });
+        console.log(res.data);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    };
+    return <></>;
+  };
+
   const renderProfileStep = () => {
     console.log("register step:" + registerStep);
     switch (registerStep) {
@@ -955,6 +994,8 @@ export default function ProfileCreation() {
       case 5:
         return <Step_5 />;
       case 6:
+        return <CreateProfile />;
+      case 7:
         return <Home />;
     }
   };

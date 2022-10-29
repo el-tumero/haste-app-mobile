@@ -129,8 +129,7 @@ export default function Welcome() {
         });
 
         const jwt = res3.headers["set-cookie"][0];
-        const jwt_good = jwt.split(";")[0].split("=")[1];
-        await SecureStore.setItemAsync("hasteToken", jwt_good);
+        await SecureStore.setItemAsync("hasteToken", jwt);
         moveToProfileCreation();
       }
     };
