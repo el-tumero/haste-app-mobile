@@ -42,13 +42,32 @@ export const prf_cr_styles = {
     padding: 20,
   },
   textinput_basic: {
-    borderWidth: 1,
+    width: "auto",
+    height: "auto",
+    borderWidth: 2,
     borderColor: "white",
     borderRadius: 10,
-    paddingVertical: "2%",
-    marginVertical: "2%",
+    marginVertical: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    marginHorizontal: 10,
     color: colors.dark_mode.text_inactive,
     textAlign: "center",
+  },
+  textinput_bio: {
+    width: "100%",
+    height: "50%",
+    borderWidth: 1.5,
+    borderColor: colors.dark_mode.lightest,
+    color: colors.text_dark_mode,
+    borderRadius: 10,
+    marginVertical: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    marginHorizontal: 10,
+    color: colors.dark_mode.text_inactive,
+    textAlign: "left",
+    textAlignVertical: "top",
   },
   textinput_long_padding: {
     paddingHorizontal: "15%",
@@ -65,15 +84,15 @@ export const prf_cr_styles = {
   },
   text_basic: {
     color: colors.dark_mode.text,
-    alignSelf: "center",
+    textAlign: "center",
     marginVertical: 8,
     lineHeight: 26,
   },
   font_sm: {
-    fontSize: 12,
+    fontSize: 13,
   },
   font_md: {
-    fontSize: 16,
+    fontSize: 17,
   },
   font_lg: {
     fontSize: 20,
@@ -90,18 +109,29 @@ export const prf_cr_styles = {
   pressable: {
     width: "auto",
     height: "auto",
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    marginHorizontal: 10,
     borderWidth: 2,
     borderRadius: 10,
     borderColor: colors.dark_mode.text_inactive,
+  },
+  pressable_classic: {
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    marginHorizontal: 10,
+  },
+  pressable_interest: {
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    marginVertical: 4,
+    marginHorizontal: 8,
   },
   pressable_active: {
     borderColor: colors.accent_color,
   },
   margin_vertical: {
     marginVertical: 8,
+  },
+  margin_horizontal: {
+    marginHorizontal: 8,
   },
   date_input_container: {
     display: "flex",
@@ -118,7 +148,25 @@ export const prf_cr_styles = {
     flexDirection: "row",
     flexWrap: "nowrap",
   },
-
+  scroll_view_interests_container: {
+    backgroundColor: colors.dark_mode.darker,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.dark_mode.lightest,
+    // flexGrow: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  scroll_view_socials_container: {
+    backgroundColor: colors.dark_mode.darker,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.dark_mode.lightest,
+    // flexGrow: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    // ????????
+  },
   // ========== //
   // Bottom Bar //
   // ========== //
