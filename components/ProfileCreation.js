@@ -943,7 +943,7 @@ export default function ProfileCreation() {
     console.log("register step:" + registerStep);
     switch (registerStep) {
       case 0:
-        return <Step_1 />;
+        return <Step_0 />;
       case 1:
         return <Step_1 />;
       case 2:
