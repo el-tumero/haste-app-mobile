@@ -28,4 +28,14 @@ export const welcome_styles = {
     height: 80,
     tintColor: "white",
   },
+  full_button: {
+    borderWidth: 1.5,
+    borderRadius: 20,
+    borderColor: "#cccccc",
+    alignItems: "center",
+    width: "75%",
+    height: "auto",
+    padding: 10,
+  },
+  text_inside_full_button: {},
 };

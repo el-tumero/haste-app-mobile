@@ -210,19 +210,19 @@ export default function Welcome() {
               </Text>
             </View>
             <Pressable
-              style={[styles.margin_vertical, styles.pressable]}
+              style={[styles.margin_vertical, welcome_s.full_button]}
               onPress={handleShowSignUp}
             >
               <Text style={[styles.font_md, styles.text_dark_mode]}>
-                Sign Up
+                SIGN UP
               </Text>
             </Pressable>
             <Pressable
-              style={[styles.margin_vertical, styles.pressable]}
+              style={[styles.margin_vertical, welcome_s.full_button]}
               onPress={""}
             >
               <Text style={[styles.font_md, styles.text_dark_mode]}>
-                Sign In
+                SIGN IN
               </Text>
             </Pressable>
           </View>
