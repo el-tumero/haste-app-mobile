@@ -10,14 +10,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useContext, createContext, useState, useEffect } from "react";
+import { colors } from "../styles/Colors";
 import { global_styles } from "../styles/global";
+import { welcome_styles } from "../styles/Welcome_styles";
 import { prf_cr_styles } from "../styles/ProfileCreation_styles";
 import { SignUp, SignUpContext } from "./SignUp";
 import close_icon from "../assets/icons/dark_mode/close_icon.png";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import ProfileCreation, { ProfileCreationContext } from "./ProfileCreation";
+import { LinearGradient } from "expo-linear-gradient";
+// import Logo from "../assets/logos/logo_haste1.svg";
+import Logo from "../assets/logos/logo_haste1.png";
 
+const welcome_s = welcome_styles;
 export const WelcomeContext = createContext();
 
 export default function Welcome() {
@@ -112,7 +118,8 @@ export default function Welcome() {
     }, [verificationCode]);
 
     useEffect(() => {
-      getVerificationCode();
+      // if added
+      if (signUpVerVisible) getVerificationCode();
     }, []);
 
     const verificationSubmit = async () => {
@@ -169,36 +176,63 @@ export default function Welcome() {
     setSignUpVerVisible(!signUpVerVisible);
   };
 
-  if (signUpFinished) return <ProfileCreation />;
-  return (
-    <SafeAreaView>
-      <View style={styles.main_container}>
-        <SignUpModal />
-        <SignUpVerificationModal />
-        <Text
-          style={[
-            styles.font_xxxl,
-            styles.text_dark_mode,
-            styles.welcome_title,
+  const WelcomeScreen = () => {
+    return (
+      <SafeAreaView>
+        <LinearGradient
+          colors={[
+            colors.welcome_gradient_top,
+            colors.welcome_gradient_middle,
+            colors.welcome_gradient_bottom,
           ]}
+          start={{ x: -0.45, y: 0 }}
         >
-          Welcome
-        </Text>
-        <Pressable
-          style={[styles.margin_vertical, styles.pressable]}
-          onPress={handleShowSignUp}
-        >
-          <Text style={[styles.font_md, styles.text_dark_mode]}>Sign Up</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.margin_vertical, styles.pressable]}
-          onPress={""}
-        >
-          <Text style={[styles.font_md, styles.text_dark_mode]}>Sign In</Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
-  );
+          <LinearGradient
+            // Background Linear Gradient
+            colors={["rgba(0,0,0,0.8)", "transparent"]}
+            style={styles.background}
+          />
+          <View style={welcome_s.main_container}>
+            <SignUpModal />
+            <SignUpVerificationModal />
+            <View style={welcome_s.title_and_logo_container}>
+              <Image style={welcome_s.logo_png} source={Logo} />
+
+              <Text
+                style={[
+                  styles.font_xxxl,
+                  styles.text_dark_mode,
+                  styles.welcome_title,
+                  welcome_s.title,
+                ]}
+              >
+                Haste
+              </Text>
+            </View>
+            <Pressable
+              style={[styles.margin_vertical, styles.pressable]}
+              onPress={handleShowSignUp}
+            >
+              <Text style={[styles.font_md, styles.text_dark_mode]}>
+                Sign Up
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.margin_vertical, styles.pressable]}
+              onPress={""}
+            >
+              <Text style={[styles.font_md, styles.text_dark_mode]}>
+                Sign In
+              </Text>
+            </Pressable>
+          </View>
+        </LinearGradient>
+      </SafeAreaView>
+    );
+  };
+
+  if (signUpFinished) return <ProfileCreation />;
+  return <WelcomeScreen />;
 }
 
 const styles = StyleSheet.create(prf_cr_styles);
