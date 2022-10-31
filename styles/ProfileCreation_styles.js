@@ -88,6 +88,9 @@ export const prf_cr_styles = {
     marginVertical: 8,
     lineHeight: 26,
   },
+  font_xsm: {
+    fontSize: 11,
+  },
   font_sm: {
     fontSize: 13,
   },

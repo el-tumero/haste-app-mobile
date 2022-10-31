@@ -16,7 +16,7 @@ export const colors = {
   },
   accent_color: "#43FFAF",
   accent_color_inactive: "#3ad694",
-  welcome_gradient_top: "#43FFAF",
-  welcome_gradient_middle: "#27a36f",
-  welcome_gradient_bottom: "#106943",
+  welcome_gradient_top: "#2de396",
+  welcome_gradient_middle: "#20a16a",
+  welcome_gradient_bottom: "#12593b",
 };

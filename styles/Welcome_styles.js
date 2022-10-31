@@ -1,12 +1,10 @@
-import { colors } from "./Colors";
-
 export const welcome_styles = {
   main_container: {
     display: "flex",
     width: "100%",
     height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-end",
+    // alignItems: "center",
   },
   title_and_logo_container: {
     display: "flex",
@@ -15,7 +13,8 @@ export const welcome_styles = {
     width: "100%",
     height: "auto",
     flexDirection: "row",
-    flexWrap: "nowrap",
+    bottom: "12.5%",
+    // backgroundColor: "black",
   },
   title: {
     fontWeight: "500",
@@ -23,14 +22,21 @@ export const welcome_styles = {
   logo_png: {
     marginLeft: -30,
     top: -10,
-    left: 4,
+    left: 6,
     width: 80,
     height: 80,
     tintColor: "white",
   },
+  bottom_container: {
+    alignItems: "center",
+    width: "100%",
+    height: "auto",
+    marginBottom: 64,
+    // backgroundColor: "black",
+  },
   full_button: {
-    borderWidth: 1.5,
-    borderRadius: 20,
+    borderWidth: 2.5,
+    borderRadius: 25,
     borderColor: "#cccccc",
     alignItems: "center",
     width: "75%",
@@ -38,4 +44,17 @@ export const welcome_styles = {
     padding: 10,
   },
   text_inside_full_button: {},
+  text_privacy_note: {
+    fontSize: 13,
+    fontWeight: "400",
+    width: "75%",
+    height: "auto",
+    lineHeight: 18,
+    padding: 18,
+    textAlign: "center",
+  },
+  text_url: {
+    fontWeight: "500",
+    textDecorationLine: "underline",
+  },
 };

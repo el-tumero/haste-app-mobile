@@ -1,141 +1,82 @@
-import jsotp from "jsotp"; // check if can remove later
-import { Base32 } from "jsotp";
-import { AES } from "crypto-js";
-import { useState, createContext } from "react";
-import axios from "axios";
-import QRCode from "react-native-qrcode-image";
 import {
   Text,
   SafeAreaView,
   TextInput,
-  StyleSheet,
-  View,
   Pressable,
+  View,
   Image,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
+import left_arrow from "../assets/icons/dark_mode/left_arrow.png";
+import { sign_up_styles } from "../styles/SignUp_styles";
+import Welcome from "./Welcome";
 import ProfileCreation from "./ProfileCreation";
 
 export const SignUpContext = createContext();
-export default function SignUp() {
+const styles = sign_up_styles;
+
+export const SignUp = () => {
+  const [returnToWelcomePage, setReturnToWelcomePage] = useState(false);
+  // USER CREDENTIALS
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [qrcode, setQrcode] = useState("");
-  const [UUID, setUUID] = useState("");
-  const [accountCreatedSuccess, setAccountCreatedSuccess] = useState(false);
 
-  const handleChangePhoneNumber = (number) => {
-    setPhoneNumber(number);
+  const returnToWelcome = () => {
+    setReturnToWelcomePage(true);
   };
 
-  const handleChangePassword = (password) => {
-    setPassword(password);
+  const handleSignUpSubmit = async () => {
+    try {
+      const res = await axios.post("https://tumer.pl/user", {
+        phone: phoneNumber,
+        password: password,
+      });
+      console.log(res.data);
+      if (res.status === 200) {
+        setUserCredentials({
+          phone: phoneNumber,
+          password: password,
+        });
+        handleShowSignUpVerification();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const handleRegisterSubmit = async () => {
-    const secret = Base32.random_gen();
-    const uri = `otpauth://totp/HASTE:${username}?secret=${secret}&issuer=HASTE`;
-    const encryptedSecret = AES.encrypt(secret, password).toString();
-    setQrcode(uri);
-    console.log(username, encryptedSecret);
-    setAccountCreatedSuccess(true);
-    // axios
-    //   .post("https://tumer.pl/user", {
-    //     username,
-    //     secret: encryptedSecret,
-    //   })
-    //   .then((response) => {
-    //     console.log(repsonse.data);
-    //     if (response.status == 200) {
-    //       console.log(response.data);
-    //       console.log("successfully created user!");
-    //     }
-    //   });
-  };
-  if (accountCreatedSuccess == false) {
+  if (!returnToWelcomePage) {
     return (
-      <SafeAreaView style={styles.main}>
-        <StatusBar style="auto" />
-        <TextInput
-          style={styles.input}
-          onChangeText={handleChangePhoneNumber}
-          placeholder="Phone number"
-          autoCapitalize={false}
-          autoCorrect={false}
-        ></TextInput>
-
-        <TextInput
-          style={styles.input}
-          onChangeText={handleChangePassword}
-          placeholder="Password"
-          secureTextEntry={true}
-          autoCapitalize={false}
-          autoCorrect={false}
-        ></TextInput>
-
-        <Pressable onPress={handleRegisterSubmit} style={styles.button}>
-          <Text style={styles.text}>REGISTER</Text>
-        </Pressable>
-
-        <Pressable
-          onPress={() => getValueFor("DEVICE_ID")}
-          style={styles.button}
-        >
-          <Text style={styles.text}>getValue</Text>
-        </Pressable>
-
-        <View style={styles.qrCtn}>
-          <QRCode
-            value={qrcode}
-            size={100}
-            bgColor="#FFFFFF"
-            fgColor="#000000"
+      <SafeAreaView style={styles.main_container}>
+        <View>
+          <Pressable onPress={returnToWelcome}>
+            <Image source={left_arrow} style={{ width: 40, height: 40 }} />
+          </Pressable>
+          <Text>Numer telefonu</Text>
+          <TextInput
+            underlineColorAndroid="transparent"
+            keyboardType="number-pad"
+            placeholder="- - - _ - - - _ - - -"
+            placeholderTextColor="grey"
+            autoCorrect={false}
+            onChangeText={(input) => setPhoneNumber(input)}
+            maxLength={9}
           />
+          <Text>Haslo</Text>
+          <TextInput
+            underlineColorAndroid="transparent"
+            secureTextEntry={true}
+            placeholder="password"
+            placeholderTextColor="grey"
+            autoCorrect={false}
+            onChangeText={(input) => setPassword(input)}
+            maxLength={9}
+          />
+          <Pressable onPress={handleSignUpSubmit}>
+            <Text>Załóż konto</Text>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
   }
-  return <ProfileCreation />;
-}
-
-const styles = StyleSheet.create({
-  main: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    justifyContent: "center",
-  },
-  input: {
-    height: 40,
-    margin: 5,
-    borderRadius: 10,
-    marginLeft: "25%",
-    width: "50%",
-    borderWidth: 1,
-    padding: 10,
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 4,
-    backgroundColor: "black",
-    marginLeft: "25%",
-    marginRight: "25%",
-    width: "50%",
-    marginTop: "2%",
-    marginBottom: "2%",
-    borderRadius: 6,
-  },
-  text: {
-    color: "white",
-  },
-  img: {
-    width: 200,
-    height: 200,
-    backgroundColor: "grey",
-    marginLeft: "25%",
-  },
-  qrCtn: {
-    marginLeft: "25%",
-  },
-});
+  return <Welcome />;
+};
