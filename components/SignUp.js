@@ -13,7 +13,6 @@ import axios from "axios";
 import return_icon from "../assets/icons/dark_mode/left_arrow.png";
 import { sign_up_styles } from "../styles/SignUp_styles";
 import Welcome from "./Welcome";
-import { StatusBar } from "expo-status-bar";
 
 export const SignUpContext = createContext();
 const styles = sign_up_styles;
@@ -62,7 +61,7 @@ export const SignUp = () => {
                 style={styles.phone_number_textinput}
                 underlineColorAndroid="transparent"
                 keyboardType="number-pad"
-                placeholder="numer"
+                placeholder="Twój numer"
                 placeholderTextColor="rgba(0,0,0,0.4)"
                 autoCorrect={false}
                 onChangeText={(input) => setPhoneNumber(input)}
@@ -76,11 +75,11 @@ export const SignUp = () => {
               <TextInput
                 underlineColorAndroid="transparent"
                 secureTextEntry={true}
-                placeholder="hasło"
+                placeholder="Hasło"
                 placeholderTextColor="grey"
                 autoCorrect={false}
                 onChangeText={(input) => setPassword(input)}
-                maxLength={9}
+                maxLength={32}
               />
             </View>
             <View style={styles.text_verification_code_notice_container}>
@@ -88,7 +87,7 @@ export const SignUp = () => {
                 Po naciśnięciu Kontynuuj, Haste wyśle Ci wiadomość sms z kodem
                 weryfikacyjnym. Mogą obowiązywać opłaty za przesyłanie
                 wiadomości i danych. Możesz użyć zweryfikowanego numeru telefonu
-                do zalogowania się na innych urządzeniach.{" "}
+                do logowania się na innych urządzeniach.{" "}
               </Text>
               <Text
                 style={styles.text_url}
@@ -97,7 +96,7 @@ export const SignUp = () => {
                 Przeczytaj co dzieje się, gdy zmienisz swój numer telefonu.
               </Text>
             </View>
-            <View style={styles.sign_up_submit_btn}>
+            <View style={styles.sign_up_submit_container}>
               <Pressable
                 style={styles.full_button}
                 onPress={handleSignUpSubmit}
