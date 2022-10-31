@@ -9,16 +9,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Button, StyleSheet, Text, View, useColorScheme } from "react-native";
 import { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
-
 import Home, { HomeContext } from "./components/Home";
-import SignUp, { SignUpContext } from "./components/SignUp";
+import { SignUp } from "./components/SignUp";
 import SignIn, { SignInContext } from "./components/SignIn";
-import ProfileCreation, {
-  ProfileCreationContext,
-} from "./components/ProfileCreation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Device from "expo-device";
-import Welcome from "./components/Welcome";
+import Welcome, { WelcomeContext } from "./components/Welcome";
 
 const Stack = createNativeStackNavigator();
 // SplashScreen.preventAutoHideAsync(); // splash for later
@@ -67,13 +63,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    FirstLaunch();
+    // FirstLaunch();
     // getDeviceInfo();
-
-    return () => {
-      console.log("starting...");
-      console.log(colorScheme);
-    };
+    // console.log("starting...");
+    // console.log(colorScheme);
   }, []);
 
   // change async to securestorage
@@ -99,7 +92,7 @@ export default function App() {
   //   );
   // } else {
   return (
-    <SignUpContext.Provider value={setLogged}>
+    <WelcomeContext.Provider value={setLogged}>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -109,7 +102,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </SignUpContext.Provider>
+    </WelcomeContext.Provider>
   );
   // }
 }

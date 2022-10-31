@@ -7,17 +7,17 @@ export const welcome_styles = {
     // alignItems: "center",
   },
   title_and_logo_container: {
+    flex: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    height: "auto",
+    height: "100%",
     flexDirection: "row",
-    bottom: "12.5%",
     // backgroundColor: "black",
   },
   title: {
-    fontWeight: "500",
+    fontWeight: "700",
   },
   logo_png: {
     marginLeft: -30,

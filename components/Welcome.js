@@ -5,22 +5,18 @@ import {
   StyleSheet,
   Pressable,
   View,
-  Modal,
   Image,
   TouchableOpacity,
-  Platform,
   Animated,
   Linking,
 } from "react-native";
-import { useContext, createContext, useState, useEffect } from "react";
-import { global_styles } from "../styles/global";
+import { createContext, useState, useEffect } from "react";
 import { colors } from "../styles/Colors";
 import { welcome_styles } from "../styles/Welcome_styles";
 import { prf_cr_styles } from "../styles/ProfileCreation_styles";
-import { SignUp, SignUpContext, SignUpModal } from "./SignUp";
-import axios from "axios";
-import * as SecureStore from "expo-secure-store";
-import ProfileCreation, { ProfileCreationContext } from "./ProfileCreation";
+import { SignUp } from "./SignUp";
+// import axios from "axios";
+// import * as SecureStore from "expo-secure-store";
 import { LinearGradient } from "expo-linear-gradient";
 import Logo from "../assets/logos/logo_haste1.png";
 import { StatusBar } from "expo-status-bar";
@@ -134,7 +130,7 @@ export default function Welcome() {
     );
   };
   if (signUpVisible) return <SignUp />;
-  // if (signUpFinished) return <ProfileCreation />;
+  if (signUpFinished) return <ProfileCreation />;
   return <WelcomeScreen />;
 }
 

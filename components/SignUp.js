@@ -5,20 +5,21 @@ import {
   Pressable,
   View,
   Image,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import left_arrow from "../assets/icons/dark_mode/left_arrow.png";
+import return_icon from "../assets/icons/dark_mode/left_arrow.png";
 import { sign_up_styles } from "../styles/SignUp_styles";
 import Welcome from "./Welcome";
-import ProfileCreation from "./ProfileCreation";
+import { StatusBar } from "expo-status-bar";
 
 export const SignUpContext = createContext();
 const styles = sign_up_styles;
 
 export const SignUp = () => {
   const [returnToWelcomePage, setReturnToWelcomePage] = useState(false);
-  // USER CREDENTIALS
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
@@ -48,32 +49,63 @@ export const SignUp = () => {
     return (
       <SafeAreaView style={styles.main_container}>
         <View>
-          <Pressable onPress={returnToWelcome}>
-            <Image source={left_arrow} style={{ width: 40, height: 40 }} />
-          </Pressable>
-          <Text>Numer telefonu</Text>
-          <TextInput
-            underlineColorAndroid="transparent"
-            keyboardType="number-pad"
-            placeholder="- - - _ - - - _ - - -"
-            placeholderTextColor="grey"
-            autoCorrect={false}
-            onChangeText={(input) => setPhoneNumber(input)}
-            maxLength={9}
-          />
-          <Text>Haslo</Text>
-          <TextInput
-            underlineColorAndroid="transparent"
-            secureTextEntry={true}
-            placeholder="password"
-            placeholderTextColor="grey"
-            autoCorrect={false}
-            onChangeText={(input) => setPassword(input)}
-            maxLength={9}
-          />
-          <Pressable onPress={handleSignUpSubmit}>
-            <Text>Załóż konto</Text>
-          </Pressable>
+          <TouchableOpacity activeOpacity={0.6} onPress={returnToWelcome}>
+            <Image source={return_icon} style={styles.return_icon} />
+          </TouchableOpacity>
+          <View style={styles.content_container}>
+            <View style={styles.title_container}>
+              <Text style={styles.title_text}>Numer telefonu</Text>
+            </View>
+            <View style={styles.phone_number_textinput_container}>
+              <Text style={styles.phone_number_country_prefix}>+48</Text>
+              <TextInput
+                style={styles.phone_number_textinput}
+                underlineColorAndroid="transparent"
+                keyboardType="number-pad"
+                placeholder="numer"
+                placeholderTextColor="rgba(0,0,0,0.4)"
+                autoCorrect={false}
+                onChangeText={(input) => setPhoneNumber(input)}
+                maxLength={9}
+              />
+            </View>
+            <View style={styles.title_container}>
+              <Text style={styles.title_text}>Hasło</Text>
+            </View>
+            <View style={styles.password_textinput_container}>
+              <TextInput
+                underlineColorAndroid="transparent"
+                secureTextEntry={true}
+                placeholder="hasło"
+                placeholderTextColor="grey"
+                autoCorrect={false}
+                onChangeText={(input) => setPassword(input)}
+                maxLength={9}
+              />
+            </View>
+            <View style={styles.text_verification_code_notice_container}>
+              <Text style={styles.text_verification_code_notice}>
+                Po naciśnięciu Kontynuuj, Haste wyśle Ci wiadomość sms z kodem
+                weryfikacyjnym. Mogą obowiązywać opłaty za przesyłanie
+                wiadomości i danych. Możesz użyć zweryfikowanego numeru telefonu
+                do zalogowania się na innych urządzeniach.{" "}
+              </Text>
+              <Text
+                style={styles.text_url}
+                onPress={() => Linking.openURL("https://google.com/")}
+              >
+                Przeczytaj co dzieje się, gdy zmienisz swój numer telefonu.
+              </Text>
+            </View>
+            <View style={styles.sign_up_submit_btn}>
+              <Pressable
+                style={styles.full_button}
+                onPress={handleSignUpSubmit}
+              >
+                <Text>KONTYNUUJ</Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
       </SafeAreaView>
     );
