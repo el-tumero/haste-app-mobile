@@ -9,7 +9,7 @@ import {
   Linking,
   Platform,
 } from "react-native";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import return_icon from "../assets/icons/dark_mode/left_arrow.png";
 import { sign_up_styles } from "../styles/SignUp_styles";
@@ -23,7 +23,7 @@ const styles = sign_up_styles;
 export const SignUp = () => {
   const [userCredentials, setUserCredentials] = useState({});
   // testing purposes
-  const [phoneNumber, setPhoneNumber] = useState("567832920");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [dataFilled, setDataFilled] = useState(false);
   const [moveToWelcome, setMoveToWelcome] = useState(false);
@@ -47,6 +47,13 @@ export const SignUp = () => {
     if (phoneNumber.length === 0 || password.length === 0) setDataFilled(false);
     if (phoneNumber.length > 0 && password.length > 0) setDataFilled(true);
   }, [phoneNumber, password]);
+
+  useEffect(() => {
+    setUserCredentials({
+      phone: phoneNumber,
+      passowrd: password,
+    });
+  }, []);
 
   const submitSignUp = async () => {
     // validateSignUpData();

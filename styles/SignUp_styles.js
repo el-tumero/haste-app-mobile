@@ -27,11 +27,11 @@ export const sign_up_styles = {
   },
   title_container: {
     width: "100%",
-    paddingVertical: 28,
-    borderRadius: 42,
+    paddingVertical: 18,
+    borderRadius: 40,
     paddingHorizontal: padding_hor,
     marginVertical: 20,
-    backgroundColor: "rgba(67,255,175,0.55)",
+    backgroundColor: "rgba(67,255,175,0.7)",
   },
   title_text: {
     fontSize: 28,
@@ -107,7 +107,7 @@ export const sign_up_styles = {
     alignItems: "center",
     width: "75%",
     height: "auto",
-    padding: 14,
+    padding: 12,
   },
   full_button_active: {
     backgroundColor: "#43FFAF",
@@ -140,7 +140,7 @@ export const sign_up_styles = {
     justifyContent: "center",
     width: "100%",
     height: "auto",
-    backgroundColor: "rgba(200,200,200,0.33)",
+    // backgroundColor: "rgba(200,200,200,0.33)",
   },
   verification_code_textinput: {
     width: "12%",
@@ -149,5 +149,14 @@ export const sign_up_styles = {
     borderBottomWidth: 1.5,
     fontSize: 32,
     fontWeight: "600",
+  },
+  verification_submit_btn_container: {
+    width: "100%",
+    alignItems: "center",
+    // backgroundColor: "skyblue",
+  },
+  verification_submit_btn_text: {
+    fontSize: 18,
+    color: "rgba(0,0,0,0.5)",
   },
 };

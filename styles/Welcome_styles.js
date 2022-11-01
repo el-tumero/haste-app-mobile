@@ -4,7 +4,6 @@ export const welcome_styles = {
     width: "100%",
     height: "100%",
     justifyContent: "flex-end",
-    // alignItems: "center",
   },
   title_and_logo_container: {
     flex: 1,
@@ -14,18 +13,16 @@ export const welcome_styles = {
     width: "100%",
     height: "100%",
     flexDirection: "row",
-    // backgroundColor: "black",
   },
   title: {
     fontWeight: "700",
   },
   logo_png: {
-    // temp solution until we get decent logo!
-    marginLeft: -30,
     top: -10,
-    left: 6,
-    width: 80,
-    height: 80,
+    marginHorizontal: 10,
+    width: 40,
+    height: 90,
+    resizeMode: "contain",
     tintColor: "white",
   },
   bottom_container: {
@@ -33,7 +30,6 @@ export const welcome_styles = {
     width: "100%",
     height: "auto",
     marginBottom: 64,
-    // backgroundColor: "black",
   },
   full_button: {
     borderWidth: 2.5,

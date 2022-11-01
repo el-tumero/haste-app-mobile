@@ -7,44 +7,84 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import return_icon from "../assets/icons/dark_mode/left_arrow.png";
 import { StatusBar } from "expo-status-bar";
 import { sign_up_styles } from "../styles/SignUp_styles";
 import { SignUp } from "./SignUp";
+import usePrevious from "../hooks/usePrevious";
 
 export const SignUpVerificationContext = createContext();
 const styles = sign_up_styles;
 
-// MAIN
-export const SignUpVerification = (props) => {
-  const [returnToSignUp, setReturnToSignUp] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
+// SINGLE DIGIT TEXTINPUT
+const VerificationDigitTextInput = (props) => {
+  const active = props.focus;
+  const setVerificationCode = props.setVerificationCode;
+  const ref = useRef();
 
   useEffect(() => {
-    if (verificationCode.length === 4) {
-      console.log("submitting");
-      verificationSubmit();
+    if (active === props.index) {
+      ref.current.focus();
     }
+  }, [active]);
+
+  const handleVerificationDigitInput = (input) => {
+    setVerificationCode((prev) => ({
+      ...prev,
+      [props.index]: input,
+    }));
+  };
+
+  return (
+    <TextInput
+      autoFocus={props.autoFocus}
+      keyboardType={"numeric"}
+      maxLength={1}
+      style={styles.verification_code_textinput}
+      onChangeText={(input) => handleVerificationDigitInput(input)}
+      ref={ref}
+    ></TextInput>
+  );
+};
+
+// MAIN
+export const SignUpVerification = (props) => {
+  const [userCredentials, setUserCredentials] = useState({});
+  const [returnToSignUp, setReturnToSignUp] = useState(false);
+  const [verificationCode, setVerificationCode] = useState({
+    0: "",
+    1: "",
+    2: "",
+    3: "",
+  });
+  const prevVerificationCode = usePrevious(verificationCode);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (prevVerificationCode) checkVerificationCodeChange();
   }, [verificationCode]);
 
   useEffect(() => {
-    // return first TextInput WITH AUTOFOCUS
-    // if (signUpVerVisible) getVerificationCode();
-  }, []);
+    // if (active === -1) {
+    //   setActive(0);
+    // }
+    console.log(active);
+  }, [active]);
 
-  const VerificationDigitTextInput = (props) => {
-    const [isFocused, setIsFocused] = useState(false);
-
-    return (
-      <TextInput
-        autoFocus={props.autoFocus}
-        keyboardType={"numeric"}
-        maxLength={1}
-        style={styles.verification_code_textinput}
-      ></TextInput>
-    );
+  const checkVerificationCodeChange = () => {
+    // console.log(active);
+    for (let i = 0; i < 4; i++) {
+      if (verificationCode[i] === "" && prevVerificationCode[i] !== "") {
+        setActive(i - 1);
+        break;
+      }
+      if (verificationCode[i] !== prevVerificationCode[i]) {
+        setActive(i + 1);
+        break;
+      }
+    }
   };
 
   const resendVerificationCode = () => {};
@@ -103,10 +143,37 @@ export const SignUpVerification = (props) => {
             </TouchableOpacity>
           </View>
           <View style={styles.verification_code_container}>
-            <VerificationDigitTextInput autoFocus={true} />
-            <VerificationDigitTextInput />
-            <VerificationDigitTextInput />
-            <VerificationDigitTextInput />
+            <VerificationDigitTextInput
+              autoFocus={true}
+              setVerificationCode={setVerificationCode}
+              index={0}
+              focus={active}
+            />
+            <VerificationDigitTextInput
+              index={1}
+              setVerificationCode={setVerificationCode}
+              focus={active}
+            />
+            <VerificationDigitTextInput
+              index={2}
+              setVerificationCode={setVerificationCode}
+              focus={active}
+            />
+            <VerificationDigitTextInput
+              index={3}
+              setVerificationCode={setVerificationCode}
+              focus={active}
+            />
+          </View>
+          <View style={styles.verification_submit_btn_container}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log(verificationCode);
+              }}
+              style={styles.full_button}
+            >
+              <Text style={styles.verification_submit_btn_text}>KONTYNUUJ</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <StatusBar

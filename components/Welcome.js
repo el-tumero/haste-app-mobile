@@ -14,7 +14,7 @@ import { welcome_styles } from "../styles/Welcome_styles";
 import { prf_cr_styles } from "../styles/ProfileCreation_styles";
 import { SignUp } from "./SignUp";
 import { LinearGradient } from "expo-linear-gradient";
-import Logo from "../assets/logos/logo_haste1.png";
+import Haste_Logo from "../assets/logos/haste.png";
 import { StatusBar } from "expo-status-bar";
 import * as Haptics from "expo-haptics";
 
@@ -74,8 +74,8 @@ export default function Welcome() {
           colors.welcome_gradient_middle,
           colors.welcome_gradient_bottom,
         ]}
-        start={[0, 0]}
-        end={[0.2, 1.3]}
+        start={[1.23, 0.22]}
+        end={[-0.55, 0.77]}
       >
         <LinearGradient
           colors={["rgba(0,0,0,0.8)", "transparent"]}
@@ -83,7 +83,7 @@ export default function Welcome() {
         />
         <SafeAreaView style={welcome_s.main_container}>
           <View style={welcome_s.title_and_logo_container}>
-            <Image style={welcome_s.logo_png} source={Logo} />
+            <Image style={welcome_s.logo_png} source={Haste_Logo} />
 
             <Text
               style={[
