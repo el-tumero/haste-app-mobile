@@ -20,6 +20,7 @@ export const welcome_styles = {
     fontWeight: "700",
   },
   logo_png: {
+    // temp solution until we get decent logo!
     marginLeft: -30,
     top: -10,
     left: 6,
@@ -37,11 +38,15 @@ export const welcome_styles = {
   full_button: {
     borderWidth: 2.5,
     borderRadius: 25,
-    borderColor: "#cccccc",
+    borderColor: "rgb(204, 204, 204)",
     alignItems: "center",
     width: "75%",
     height: "auto",
     padding: 10,
+  },
+  full_button_pressed: {
+    width: "73.5%",
+    borderColor: "rgba(204, 204, 204, 0.66)",
   },
   text_inside_full_button: {},
   text_privacy_note: {

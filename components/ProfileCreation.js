@@ -476,7 +476,6 @@ export default function ProfileCreation() {
                 <Text style={[styles.text_basic, styles.font_md]}>Inne</Text>
               </Pressable>
             </View>
-            {/* ============== */}
             <Text style={[styles.text_basic, styles.font_lg]}>
               Interesują mnie
             </Text>
