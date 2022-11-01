@@ -66,15 +66,7 @@ export const SignUpVerification = (props) => {
     if (prevVerificationCode) checkVerificationCodeChange();
   }, [verificationCode]);
 
-  useEffect(() => {
-    // if (active === -1) {
-    //   setActive(0);
-    // }
-    console.log(active);
-  }, [active]);
-
   const checkVerificationCodeChange = () => {
-    // console.log(active);
     for (let i = 0; i < 4; i++) {
       if (verificationCode[i] === "" && prevVerificationCode[i] !== "") {
         setActive(i - 1);
